@@ -6,6 +6,7 @@
 // #include <mpegdecoder.h>
 // #include <decmpadecoder.h>
 #include <rtaudiooutput.h>
+#include <outputbase.h>
 
 
 using namespace izsound;
@@ -20,9 +21,16 @@ int main()
     SndFileDecoder decoder;
 //     MpegDecoder decoder;
 //     DecMPADecoder decoder;
-    RtAudioOutput oss;
+    RtAudioOutput oss( 2048, 48000);
     sleep(1);
+    OSEDeviceInfo info;
+    oss.getDeviceInfo( 1, &info );
+    cout << "name = " << info.name << endl;
     cout << "Devices = " << oss.getDeviceCount() << endl;
+    cout << "outputChannels = " << info.outputChannels << endl;
+    cout << "inputChannels = " << info.inputChannels << endl;
+    
+    
     cout << "Ok apout" << endl;
 //     ApFileDecoder ap;
 //     MadDecoder decoder;
@@ -41,7 +49,7 @@ int main()
     unsigned int frames = decoder.getFrames();
     cout << "Frames = " << frames << endl;
     cout << "Total time = " << decoder.getTotalTime() << endl;
-//     decoder.play();
+    decoder.play();
 //     sleep(3);
 //     decoder.setCurrentTime( 30 );
 //     decoder.setFrame( frames - 5000000 );

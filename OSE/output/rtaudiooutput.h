@@ -28,7 +28,7 @@
 #include <rtaudio/RtError.h>
 #include <outputbase.h>
 
-#define		DEFAULT_NUM_OF_BUFFERS		8
+#define		DEFAULT_NUM_OF_BUFFERS		4
 
 namespace izsound
 {
@@ -85,7 +85,7 @@ private:
   
   
   /** RtAudio objects rack. Everyone represents a device. */
-  RtAudio* device_rack[MAX_STEREO_OUTPUTS];
+  RtAudio* device_rack[MAX_NUM_OF_STREAMS];
   
   /** Number of RtAudio buffers. */
   int m_nBuffers;

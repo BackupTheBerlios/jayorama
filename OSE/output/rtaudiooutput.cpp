@@ -33,13 +33,23 @@ RtAudioOutput::RtAudioOutput( const unsigned int &bufferSize ,
   RtAudioFormat format = RTAUDIO_FLOAT64;
 #endif
   
-  for ( int k = 0; k < MAX_STEREO_OUTPUTS; k++ )
+  for ( int k = 0; k < MAX_NUM_OF_STREAMS; k++ )
+  {
   	device_rack[ k ] = NULL;
+#ifdef _FLOAT_ENGINE
+	if ( m_outBuffer[k] != NULL )
+		delete[] (float*)m_outBuffer[k];
+#endif 
+#ifdef _DOUBLE_ENGINE
+	if ( m_outBuffer[k] != NULL )
+		delete[] (double*)m_outBuffer[k];
+#endif
+  }
   
+  RtAudio *temp_dev;
   // Opening the default and get some data
   try {
-    device_rack[ 0 ] = new RtAudio(0, 2, 0, 0, format,
-                      sampleRate, (int*)&m_outBufferSize, DEFAULT_NUM_OF_BUFFERS);
+    temp_dev = new RtAudio();
   }
   catch (RtError &error) {
     // Handle the exception here
@@ -49,64 +59,107 @@ RtAudioOutput::RtAudioOutput( const unsigned int &bufferSize ,
     return;
   }
   
-  m_nDevices = device_rack[0]->getDeviceCount();
+  m_nDevices = temp_dev->getDeviceCount();
   
-  int to_be_opened = 0;
-  if ( m_nDevices > MAX_STEREO_OUTPUTS )
-  	to_be_opened = m_nDevices;
-  else
-  	to_be_opened = MAX_STEREO_OUTPUTS;
-  
-  for ( int u = 1; u < to_be_opened; u++ )
-  {
-	// stream opening... (always stereo ==> channels = 2!)
-	try {
-		device_rack[ u ] = new RtAudio(0, 2, 0, 0, format,
-                      sampleRate, (int*)&m_outBufferSize, DEFAULT_NUM_OF_BUFFERS);
-	}
-		catch (RtError &error) {
-		cerr << "Error: opening RtAudio device " << u << endl;
-		m_status = OUTPUT_ERROR_OPEN;
-    		return;
-	}
-  }
-  
-  // Delete already instantiated buffers to get RtAudio buffer
-  // pointers.
-#ifdef _FLOAT_ENGINE
-  for ( int i = 0; i < MAX_STEREO_OUTPUTS; i++)
-  {
-  	if ( m_outBuffer[i] != NULL )
-		delete[] (float*)m_outBuffer[i];
-  }
-#endif 
-#ifdef _DOUBLE_ENGINE
-  for ( int i = 0; i < MAX_STEREO_OUTPUTS; i++)
-  {
-  	if ( m_outBuffer[i] != NULL )
-  		delete[] (double*)m_outBuffer[i];
-  }
+#ifdef DEBUG
+  cout << "m_nDevices = " << m_nDevices << endl;
 #endif
 
-  // Start streaming and get buffer pointers
-  for ( int u = 0; u < to_be_opened; u++ )
+
+  int rack_index = 0;
+  for ( int u = 1; u <= m_nDevices; u++ )
   {
-  	try {
+  	int _samplerate = (int)sampleRate;
+  	RtAudioDeviceInfo rt_info = temp_dev->getDeviceInfo( u );
+	
+	// We try to open the bigger number of stereo streams
+	// on each device. If we could open more than MAX_NUM_OF_STREAMS
+	// we stop when we reach MAX_NUM_OF_STREAMS.
+	
+	// if not probed the device is busy or unavailable
+	if ( !rt_info.probed )
+		continue;
+
+	int num_of_out_stereo_streams_for_this_dev = rt_info.outputChannels / 2;
+	
+	bool sample_rate_ok = false;
+	bool support_44100 = false;
+	unsigned int sr_vector_size = rt_info.sampleRates.size();
+#ifdef DEBUG
+ 	cout << "sr_vector_size = " << sr_vector_size << endl;
+#endif
+	if ( sr_vector_size == 0 )
+	{
+		cerr << "Error: empty samplerate vector found at device " << u << endl;
+		continue;
+	}
+	for ( unsigned int y = 0; y < sr_vector_size; y++ )
+	{
+		if (rt_info.sampleRates[y] == _samplerate)
+		{
+			sample_rate_ok = true;
+// 			break;
+		}
+		if ( rt_info.sampleRates[y] == 44100 )
+			support_44100 = true;
+#ifdef DEBUG
+ 		cout << "rt_info.sampleRates[y] = " << rt_info.sampleRates[y] << endl;
+#endif
+	}
+	
+	if ( ( sample_rate_ok == false ) && ( support_44100 == true ) )
+	{
+		cerr << "Error: can't set up samplerate " << sampleRate << endl;
+		cerr << "	trying 44100 instead..." << endl;
+		_samplerate = 44100;
+	}
+	else
+	{
+		if ( ( sample_rate_ok == false ) && ( support_44100 == false ) )
+		{
+			cerr << "Error: can't find a samplerate supported by device. Abort. " << endl;
+			continue;
+		}
+	}
+	
+	for ( int g = 0; g < num_of_out_stereo_streams_for_this_dev; g++)
+	{
+		try {
+			device_rack[ rack_index ] = new RtAudio(u, 2, 0, 0, format,
+			_samplerate, (int*)&m_outBufferSize, DEFAULT_NUM_OF_BUFFERS);
+		}
+			catch (RtError &error) {
+			cerr << "Error: opening RtAudio device " << u << endl;
+			m_status = OUTPUT_ERROR_OPEN;
+			return;
+		}
+		
+		// Delete already instantiated buffers to get RtAudio buffer
+  		// pointers. Start streaming then.
+		try {
 #ifdef _FLOAT_ENGINE
-		m_outBuffer[ u ] = (float*)device_rack[ u ]->getStreamBuffer();
+			m_outBuffer[ rack_index ] = (float*)device_rack[ rack_index ]->getStreamBuffer();
 #endif 
 #ifdef _DOUBLE_ENGINE
-  		m_outBuffer[ u ] = (double*)device_rack[ u ]->getStreamBuffer();
+			m_outBuffer[ rack_index ] = (double*)device_rack[ rack_index ]->getStreamBuffer();
 #endif
-		device_rack[ u ]->startStream();
+			device_rack[ rack_index ]->startStream();
+		}
+		catch (RtError &error) {
+			error.printMessage();
+			cerr << "Error: RtAudio error starting stream for device " << u << endl;
+			m_status = OUTPUT_ERROR_OPEN;
+			return;
+		}
+		rack_index++;
+		if ( rack_index == MAX_NUM_OF_STREAMS )
+			break;
 	}
-	catch (RtError &error) {
-		error.printMessage();
-		cerr << "Error: RtAudio error starting the stream "<< endl;
-		m_status = OUTPUT_ERROR_OPEN;
-    		return;
-	}
+	
+	if ( rack_index == MAX_NUM_OF_STREAMS )
+		break;
   }
+  
 
   m_status = OUTPUT_OK;
 }
@@ -114,7 +167,7 @@ RtAudioOutput::RtAudioOutput( const unsigned int &bufferSize ,
 
 RtAudioOutput::~RtAudioOutput()
 {
-  for ( int i = 0; i < MAX_STEREO_OUTPUTS; i++)
+  for ( int i = 0; i < MAX_NUM_OF_STREAMS; i++)
   {
   	m_outBuffer[i] = NULL;
 	
@@ -137,7 +190,7 @@ RtAudioOutput::~RtAudioOutput()
 
 void RtAudioOutput::getDeviceInfo( int device_id, OSEDeviceInfo* info )
 {
-  if ( device_id >= m_nDevices )
+  if ( (device_id > m_nDevices) && (device_id <= 0)  )
   {
   	cerr << "Error: RtAudioOutput::getDeviceInfo() trying a non-existant device!" << endl;
 	return;

@@ -8,6 +8,20 @@ Version UNKNOWN ---------------------------------
 -------------------------------------------------
 
 
+( 010-08-2004 )
+
+o)+ RtAudioOutput now working! ;-) Ok... not correctly yet,
+    but my soundcard grasp and I'm happy!;
+o)+ Fixes at OutputBase;
+
+
+( 09-08-2004 )
+
+o)+ RtAudioOutput updated and corrected. The set up is ok but
+    no working again;
+o)+ Fixes at OutputBase;
+    
+
 ( 07-08-2004 )
 
 o)+ RtAudioOutput has been coded partially. Some issues to be

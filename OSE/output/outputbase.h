@@ -53,7 +53,8 @@ namespace izsound
 #define		OUTPUT_ERROR_WRITE	3
  
 // DspUnit parameters definitions
-#define		MAX_STEREO_OUTPUTS	8
+#define		MAX_NUM_OF_STREAMS	16
+#define		MAX_NUM_OF_DEVICES	8
 
 
 
@@ -161,13 +162,13 @@ protected:
   int m_status;
   
   /** The output buffer. */
-  void* m_outBuffer[MAX_STEREO_OUTPUTS];
+  void* m_outBuffer[MAX_NUM_OF_STREAMS];
   
   /** The out buffer size. */
   unsigned int m_outBufferSize;
   
   /** Internal buffer position. Used by writeToBuffer() */
-  unsigned int m_bufferPosition[MAX_STEREO_OUTPUTS];
+  unsigned int m_bufferPosition[MAX_NUM_OF_STREAMS];
 
 };
 

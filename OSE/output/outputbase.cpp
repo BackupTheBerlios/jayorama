@@ -28,19 +28,24 @@ using namespace izsound;
 
 OutputBase::OutputBase(  const unsigned int &bufferSize,
                          const unsigned int &sampleRate)
-:DspUnit(sampleRate, MAX_STEREO_OUTPUTS, 0)
+:DspUnit(sampleRate, MAX_NUM_OF_STREAMS, 0)
 {
   // Init
   m_status = OUTPUT_OK;
   m_outBufferSize = bufferSize;
+  m_sampleRate = sampleRate;
+  for ( int i = 0; i < MAX_NUM_OF_STREAMS; i++)
+  {
+  	m_bufferPosition[i] = 0;
+  }
 #ifdef _FLOAT_ENGINE
-  for ( int i = 0; i < MAX_STEREO_OUTPUTS; i++)
+  for ( int i = 0; i < MAX_NUM_OF_STREAMS; i++)
   {
   	m_outBuffer[i] = new float[m_outBufferSize];
   }
 #endif 
 #ifdef _DOUBLE_ENGINE
-  for ( int i = 0; i < MAX_STEREO_OUTPUTS; i++)
+  for ( int i = 0; i < MAX_NUM_OF_STREAMS; i++)
   {
   	m_outBuffer[i] = new double[m_outBufferSize];
   }
@@ -51,14 +56,14 @@ OutputBase::OutputBase(  const unsigned int &bufferSize,
 OutputBase::~OutputBase()
 {
 #ifdef _FLOAT_ENGINE
-  for ( int i = 0; i < MAX_STEREO_OUTPUTS; i++)
+  for ( int i = 0; i < MAX_NUM_OF_STREAMS; i++)
   {
   	if ( m_outBuffer[i] != NULL )
 		delete[] (float*)m_outBuffer[i];
   }
 #endif 
 #ifdef _DOUBLE_ENGINE
-  for ( int i = 0; i < MAX_STEREO_OUTPUTS; i++)
+  for ( int i = 0; i < MAX_NUM_OF_STREAMS; i++)
   {
   	if ( m_outBuffer[i] != NULL )
   		delete[] (double*)m_outBuffer[i];
@@ -69,7 +74,13 @@ OutputBase::~OutputBase()
 
 void OutputBase::performDsp()
 { 
-  for ( int i = 0; i < MAX_STEREO_OUTPUTS; i++)
+  if ( m_status != OUTPUT_OK )
+  {
+  	cerr << "Error: error in OutputBase::performDsp(). Exiting..." << endl;
+	return; 
+  }
+  
+  for ( int i = 0; i < MAX_NUM_OF_STREAMS; i++)
   {
 	// Init
 	SlotData* data = m_inSlots[i];
@@ -84,16 +95,17 @@ void OutputBase::performDsp()
 #ifdef _DOUBLE_ENGINE
 		double *_buffer = (double*)m_outBuffer[i];
 #endif
-		_buffer[j] = (*data)[0][j++];
-		_buffer[i]++;
-		_buffer[j--] = (*data)[1][j];
-		_buffer[i]++;
+		_buffer[m_bufferPosition[i]++] = (*data)[0][j];
+		_buffer[m_bufferPosition[i]] = (*data)[1][j];
 		
 		// We write to the device if needed
-		if (m_bufferPosition[i] == m_outBufferSize)
+		if (m_bufferPosition[i] == (m_outBufferSize - 1))
 		{
 			write( i, m_outBufferSize, m_outBuffer[i] );
+			m_bufferPosition[i] = 0;
 		}
+		else
+			m_bufferPosition[i]++;
 	}
   }
 }
