@@ -1,7 +1,7 @@
 
 # Project file definition ---------------------------------------------
 PROJECT_FILE = test.pro
-PROJECT_SETTINGS = no_qt   enable_config_h   enable_summary
+PROJECT_SETTINGS = no_qt   enable_config_h   
 #----------------------------------------------------------------------
 
 
@@ -126,21 +126,21 @@ include( check.qbas )
 
 
 
-
-#   LIBMPEG3 LIBRARY ---------------------------------------------------
-OBJECT = libmpeg3.a
-TYPE = lib
-DESCRIPTION = LibMpeg3 library
-FEATURE = mpeg3
-TIP_MESSAGE = "If you have libmpeg3, copy 'limpeg3.a' in '/usr/local/lib'. That's enough."
-LINK_LIBS = 
-ADD_HEADERS = ../input/mp3filedecoder.h 
-ADD_SOURCES = ../input/mp3filedecoder.cpp
-OPTIONS =  exit_on_failure  disable_feature
-#----------------------------------------------------------------------
-# Check routines         (DON'T TOUCH!)
-include( check.qbas )
-#----------------------------------------------------------------------
+ 
+# #   LIBMPEG3 LIBRARY ---------------------------------------------------
+# OBJECT = libmpeg3.a
+# TYPE = lib
+# DESCRIPTION = LibMpeg3 library
+# FEATURE = mpeg3
+# TIP_MESSAGE = "If you have libmpeg3, copy 'limpeg3.a' in '/usr/local/lib'. That's enough."
+# LINK_LIBS = 
+# ADD_HEADERS = ../input/mp3filedecoder.h 
+# ADD_SOURCES = ../input/mp3filedecoder.cpp
+# OPTIONS =  exit_on_failure  disable_feature
+# #----------------------------------------------------------------------
+# # Check routines         (DON'T TOUCH!)
+# include( check.qbas )
+# #----------------------------------------------------------------------
 
 
 
@@ -474,6 +474,35 @@ TYPE = lib
 DESCRIPTION = Dl library
 TIP_MESSAGE =
 LINK_LIBS = -ldl 
+OPTIONS =  exit_on_failure
+#----------------------------------------------------------------------
+# Check routines         (DON'T TOUCH!)
+include( check.qbas )
+#----------------------------------------------------------------------
+
+
+
+
+#   pthread.h HEADER --------------------------------------------------
+OBJECT = pthread.h
+TYPE = header
+CONFIG_HEADER_DEFINE = HAVE_PTHREAD_H
+OPTIONS =  exit_on_failure
+#----------------------------------------------------------------------
+# Check routines         (DON'T TOUCH!)
+include( check.qbas )
+#----------------------------------------------------------------------
+
+
+
+
+
+#   PTHREAD LIBRARY ---------------------------------------------------
+OBJECT = libpthread.a
+TYPE = lib
+DESCRIPTION = Pthread library
+TIP_MESSAGE =
+LINK_LIBS = -lpthread 
 OPTIONS =  exit_on_failure
 #----------------------------------------------------------------------
 # Check routines         (DON'T TOUCH!)

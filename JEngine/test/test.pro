@@ -1,8 +1,7 @@
 include( main.qbas )
 
 INCLUDEPATH = /usr/local/include/izsound /usr/include/izsound  ../input ../output ../dsp ../common ../external ../external/izsound/izsound/izsound ../external/izsound/std-dsp/izsound
-SOURCES	+= ../input/sndfiledecoder.cpp \
-        main.cpp \
+SOURCES	+=  main.cpp \
 	../external/izsound/izsound/dspunit.cpp \
 	../external/izsound/std-dsp/bandfilter.cpp \
 	../external/izsound/std-dsp/blackhole.cpp \
@@ -20,10 +19,9 @@ SOURCES	+= ../input/sndfiledecoder.cpp \
 	../external/izsound/std-dsp/silencer.cpp \
 	../external/izsound/std-dsp/volume.cpp \
 	../external/izsound/std-dsp/whitenoise.cpp \
-	../input/aoggfiledecoder.cpp
-HEADERS	+= ../input/aplayer.h \
-	../input/sndfiledecoder.h \
-	../external/izsound/izsound/izsound/dspunit.h \
+	../input/decoderbase.cpp \
+	../input/formats/sndfiledecoder.cpp 
+HEADERS	+= ../external/izsound/izsound/izsound/dspunit.h \
 	../external/izsound/izsound/izsound/izsoundexception.h \
 	../external/izsound/izsound/izsound/player.h \
 	../external/izsound/std-dsp/izsound/bandfilter.h \
@@ -42,7 +40,8 @@ HEADERS	+= ../input/aplayer.h \
 	../external/izsound/std-dsp/izsound/silencer.h \
 	../external/izsound/std-dsp/izsound/volume.h \
 	../external/izsound/std-dsp/izsound/whitenoise.h \
-	../input/aoggfiledecoder.h
+	../input/decoderbase.h \
+	../input/formats/sndfiledecoder.h 
 unix {
   UI_DIR = .ui
   MOC_DIR = .moc

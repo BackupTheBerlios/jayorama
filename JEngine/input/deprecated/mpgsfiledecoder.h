@@ -6,7 +6,7 @@
  */
 
 
-/* aplayer.h
+/* mpgsfiledecoder.h
  *
  *  Copyright (C) 2004 Gianluca Romanin (aka J_Zar) <jayorama_at_users.sourceforge.net>
  *
@@ -24,8 +24,8 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-
-/*
+ 
+ /*
  * IzSound - Copyright (c) 2003, 2004 Julien PONGE - All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -54,18 +54,19 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+ 
+ 
 
-#ifndef _APLAYER_H
-#define _APLAYER_H
+#ifndef	_MPGSFILEDECODER_H
+#define	_MPGSFILEDECODER_H
 
-// #ifdef HAVE_CONFIG_H
-// #include <config.h>
-// #endif
 
-#include <izsoundexception.h>
 
-#define FORWARD		1
-#define BACKWARD	2
+#include <mpegsound/mpegsound.h>
+#include <aplayer.h>
+#include <dspunit.h>
+#include <vector>
+
 
 
 using namespace std;
@@ -74,52 +75,136 @@ namespace izsound
 {
 
 /**
- * Defines an interface for an advanced player. 
- * Every decoder class will inherit APlayer.
- * 
- * WARNING! A "frame" is intended in the libsndfile way,
- * as a group of samples, one for each channel. So, if we have
- * a stereo stream, a frame would have 2 samples.
- * We are using pcm data frames. So if we have a samplerate
- * of 44100 Hz and a stereo stream, each frame plays 1/44100 
- * of second. This is less than a millisecond and our decoder
- * class must be capable to seek frames.
+ * Decodes a mpeg audio stream using MpegSound by Woo-jae Jung.
  *
- * @author Julien PONGE <julien@izforge.com>
  * @author Gianluca Romanin (aka J_Zar) <jayorama_at_users.sourceforge.net>
  */
- 
- 
- enum AStatus 
- {
- 	APLAYER_OK,
-	APLAYER_ERROR_UNKNOWN,
-	APLAYER_FORMAT_UNKNOWN,
-	APLAYER_LOAD_ERROR 
- };
- 
- 
-class APlayer
+class MpgsFileDecoder : public DspUnit, public virtual APlayer
 {
 
+private:
+  
+  /** MpegSound raw decoder pointer. */
+  Mpegtoraw *decoder;
+
+  /** MpegSound file loader. */
+  Soundinputstreamfromfile *loader;
+  
+  /** Stream channels. */
+  int channels;
+  
+  /** Stream samplerate. */
+  int samplerate;
+  
+  /** Stream frames. */
+  int frames;
+  
+  /** Position in frames */
+  int frame_position;
+  
+  /** Nr of frames contained in the buffer */
+  int frames_in_buffer;
+  
+  /** The reading buffer size. */
+  unsigned int m_readBufferSize;
+  
+  /** The reading buffer size in bytes. */
+  int m_readBufferSizeBytes;
+
+  /** The reading buffer. */
+  float* m_readBuffer_left;
+  float* m_readBuffer_right;
+
+  /** Tells wether we've reached the end of the stream or not. */
+  bool m_endReached;
+  
+  /** Stream direction. */
+  int m_direction;
+
+  /**
+   * Playing status enumeration.
+   */
+  enum PlayingState {PLAY, PAUSE, STOP};
+
+  /**
+   * The player current status.
+   */
+  PlayingState m_playerStatus;
+  
+
+protected:
+
+  /**
+   * Performs the decoding job, sending to the next unit one chunk of data.
+   */
+  virtual void performDsp();
+
+  /**
+   * Plays the next current file decoded chunk.
+   */
+  void playNextChunk();
+
+  /**
+   * Plays nothing (clears the next DSP unit buffers).
+   */
+  void playNothing();
+
 public:
+
+  /**
+   * The constructor. This one starts with a file and in the playing state.
+   *
+   * @param filename The valid path to the file to read.
+   * @param bufferSize The buffer size to use for the decoding. Note that this
+   *        is a maximum size, but nothing guaranties that the buffer will be
+   *        full at each <code>performDsp()</code> invocation.
+   * @throw IzSoundException An exception is thrown when the file opening
+   *         operation fails.
+   */
+  MpgsFileDecoder(const char* filename,
+                 const unsigned int &bufferSize = 4096,
+                 const unsigned int &sampleRate = 44100)
+  throw(IzSoundException);
+
+  /**
+   * The constructor. This ones starts with no file loaded.
+   *
+   * @param bufferSize The buffer size to use for the decoding. Note that this
+   *        is a maximum size, but nothing guaranties that the buffer will be
+   *        full at each <code>performDsp()</code> invocation.
+   */
+  MpgsFileDecoder(const unsigned int &bufferSize = 4096,
+                 const unsigned int &sampleRate = 44100);
+
+  /**
+   * The destructor.
+   */
+  virtual ~MpgsFileDecoder();
+
+  /**
+   * Tells wether the end of the stream has been reached or not.
+   *
+   * @return <code>true</code> if we have reached the end, <code>false</code>
+   *         otherwise.
+   */
+  virtual bool isEndReached() { return m_endReached; }
 
   /**
    * Play operation. The expected behaviour is to start playing from the
    * current position.
    */
-  virtual void play() = 0;
+  virtual void play();
 
   /**
    * Pause operation.
    */
-  virtual void pause() = 0;
+  virtual void pause();
 
   /**
    * Stop operation. The expected behaviour is to go back to the beginning of
    * the source.
    */
-  virtual void stop() = 0;
+  virtual void stop();
 
   /**
    * Opens a file from a filename.
@@ -128,72 +213,63 @@ public:
    * @throw IzSoundException An exception is thrown when the opening operation
    *                         process encounters a failure.
    */
-  virtual void open(const char* filename) throw(IzSoundException) = 0;
-
-  /**
-   * Indicates if we have reached the end of the stream or not.
-   *
-   * @return <code>true</code> if we have reached the end, <code>false</code>
-   *         otherwise.
-   */
-  virtual bool isEndReached() = 0;
+  virtual void open(const char* filename) throw(IzSoundException);
 
   /**
    * Returns the total stream playing time, in seconds.
    *
    * @return The total playing time.
    */
-  virtual int getTotalTime() = 0;
+  virtual int getTotalTime();
   
   /**
    * Returns the total stream frames.
    *
    * @return The total frames.
    */
-  virtual int getFrames() = 0;
+  virtual int getFrames();
   
   /**
    * Seek to frame.
    *
    * @param frame The frame position to seek.
    */
-  virtual void setFrame(int frame) = 0;
+  virtual void setFrame(int frame);
   
   /**
    * Returns the current frame.
    *
    * @return The current frame.
    */
-  virtual int getFrame() = 0;
+  virtual int getFrame();
 
   /**
-   * Seeks to a position in seconds.
+   * Seeks to a position.
    *
    * @param pos The position in seconds.
    */
-  virtual void setCurrentTime(int pos) = 0;
+  virtual void setCurrentTime(int pos);
 
   /**
    * Gets the current time, in seconds.
    *
    * @return The current time, in seconds.
    */
-  virtual int getCurrentTime() = 0;
+  virtual int getCurrentTime();
   
   /**
    * Set the read direction of the audio stream.
    *
    * @param direction Could be FORWARD or BACKWARD.
    */
-  virtual void setReadDirection(int direction) = 0;
+  virtual void setReadDirection(int direction);
   
-  private:
-  
-  /** Status of the decoder unit. **/
-  AStatus m_status;
 
 };
 
+
 }
 
+
 #endif
+
