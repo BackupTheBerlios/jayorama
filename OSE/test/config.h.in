@@ -1,0 +1,26 @@
+/* Define to 1 if the system has the type `_Bool'. */
+#define HAVE__BOOL 1
+
+/* Name of package */
+#define PACKAGE "izsound"
+
+/* Define to the address where bug reports for this package should be sent. */
+#define PACKAGE_BUGREPORT "julien@izforge.com"
+
+/* Define to the full name of this package. */
+#define PACKAGE_NAME "IzSound"
+
+/* Define to the full name and version of this package. */
+#define PACKAGE_STRING "IzSound 0.3.0"
+
+/* Define to the one symbol short name of this package. */
+#define PACKAGE_TARNAME "izsound"
+
+/* Define to the version of this package. */
+#define PACKAGE_VERSION "0.3.0"
+
+/* Version number of package */
+#define VERSION "0.3.0"
+
+/* Debug. */
+#define DEBUG 1
