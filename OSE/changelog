@@ -1,0 +1,20 @@
+ 
+
+
+		----->>>   CHANGELOG   <<<-----
+
+
+Version UNKNOWN ---------------------------------
+-------------------------------------------------
+
+( 19-07-2004 )
+
+o)* Project name and design changed;
+
+
+( 02-07-2004 )
+
+0)+ Coded DecoderBase class. Inherits DspUnit. Every decoding format
+    class should inherit DecoderBase;
+
+

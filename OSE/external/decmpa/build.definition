@@ -1,0 +1,12 @@
+
+# Project file definition ---------------------------------------------
+PROJECT_FILE = decmpa.pro
+PROJECT_SETTINGS = no_qt
+#----------------------------------------------------------------------
+
+
+# Custom error message ------------------------------------------------
+ERROR_TEMPLATE_MESSAGE = Cannot compile without
+#----------------------------------------------------------------------
+
+

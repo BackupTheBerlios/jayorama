@@ -1,0 +1,105 @@
+	=================
+	Open Sound Engine
+	=================
+
+	Draft version: 0.1 (19/07/2004)
+
+Implementation design and project details for developer audience.
+Read it in this way:
+
+"==" underline code sections
+"[]" at the beginning, show the developer who wrote the object
+"{}" at the end, show the status of the object 
+
+
+Main
+===================
+
+o)- [ J_Zar ] C++ language with C function insertions {closed};
+o)- [ J_Zar ] Architectural design provided by IzSound: DspUnit class
+    will be the base for every other (or almost every) class. Then
+    in the high-end classes will be formed the input-output chain;
+o)- [ J_Zar ] More audio data standards support: high precision
+    (double type), single precison (float type). Maybe could
+    be useful to support 32 bit integer audio (more performance).
+    The whole thing need a little fix to the dspunit.h
+    file of IzSound;
+
+
+Input
+===================
+
+o)- [ J_Zar ] Threaded decoding class to achieve good performance and
+    class control by the engine. DecoderBase has been already coded
+    as a draft: it allow easy inherit and performs almost all base
+    operations. Needs other work to do some other stuff and simplify
+    format classes (i.e. thinking to data conversion or directional
+    decoding);
+o)- [ J_Zar ] Support for widespread formats: vorbis (ogg at first,
+    speex and flac following), mpeg (layer I/II/III), wav, aiff;
+o)- [ J_Zar ] A C function could be coded to provide the right format 
+    decoder class for a file (function factory trick);
+
+    
+DSP
+===================
+
+o)- [ J_Zar ] Pitch and tempo shift DspUnit using SoundTouch;
+o)- [ J_Zar ] Dynamic BPM search with SounTouch code {proposal};
+o)- [ J_Zar ] Mixing class: should do only mix trough many inputs
+    in some outputs (draft already coded, MCMixer.h);
+o)- [ J_Zar ] Gain and level adjust class: can be coded also an
+    autogain system (see code from mp3gain and ReplyGain);
+o)- [ J_Zar ] Crossfader class (maybe not a DspUnit);
+o)- [ J_Zar ] Equalization class with flanger too;
+o)- [ J_Zar ] LADSPA and VSTI support (issues with interface?)
+    {proposal};
+    
+    
+Output
+===================
+
+o)- [ J_Zar ] RtAudio multiplatform inclusion: class should set
+    up physical devices {tothink};
+o)- [ J_Zar ] Support for PortAudio;
+o)- [ J_Zar ] No need of other output API code: PortAudio and RtAudio
+    coverage is Linux (OSS, Alsa, Jack), MS (DirectSound, ME, ASIO),
+    Mac (CoreAudio) {tothink};
+o)- [ J_Zar ] To think about how set up the output platform {tothink};
+    
+    
+Side code
+===================
+
+o)- [ J_Zar ] To think of playlist support: maybe a good playlist
+    format and a nice library to interface with it would be good
+    {tothink};
+o)- [ J_Zar ] AudioManager object. It should stand besides the engine
+    main class {tothink};
+o)- [ J_Zar ] Tag code {tothink};
+
+
+High-level
+===================
+
+o)- [ J_Zar ] The main class should set up the chain:
+    
+    input(decoders but not only)--->Dsp(level, gain, pitch, mixer)--->Output(RtAudio,PortAudio)
+    
+    Implementation of a player object (includes a decoder class, pitch, 
+    level, gain and mixer position to enable/disable it). A player will be chained
+    to the mixer. The mixer to output platform.
+    Developer will get players pointers and chain control 
+    through the main class.
+    
+
+Build environment
+===================
+
+o)- [ J_Zar ] Build scripts must be cross platform. I dislike
+    GNU tools. I'm able to use qmake, that allows a library build detached
+    from interface libs also if it comes with Qt libs. 
+    My QBAS should be than easy to use as dep check {tothink};
+    
+    
+    
