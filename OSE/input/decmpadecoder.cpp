@@ -209,7 +209,7 @@ void DecMPADecoder::decode(int direction, unsigned int frame_position,
 }
 
 
-void DecMPADecoder::open(const char* filename)
+void DecMPADecoder::openFile(const char* filename)
 {
   // Before doing something, it is better to stop
   // the decoder: we avoid mutex issues!

@@ -122,7 +122,7 @@ void MpadecDecoder::decode( unsigned int frame_position,
 }
 
 
-void MpadecDecoder::open(const char* filename)
+void MpadecDecoder::openFile(const char* filename)
 {
   // Before doing something, it is better to stop
   // the decoder: we avoid mutex issues!
@@ -141,7 +141,7 @@ void MpadecDecoder::open(const char* filename)
 	return;
   }
   
-  if ( (int err = mp3dec_init_file(mpa, fd, 0, FALSE)) != MP3DEC_RETCODE_OK) 
+  if ( (int err = mp3dec_init_file(mpa, fd, 0, false)) != MP3DEC_RETCODE_OK) 
   {
     	if ( err == MP3DEC_RETCODE_NOT_MPEG_STREAM )
 	{

@@ -105,7 +105,7 @@ void SndFileDecoder::decode( unsigned int frame_position,
 }
 
 
-void SndFileDecoder::open(const char* filename)
+void SndFileDecoder::openFile(const char* filename)
 {
   // Before doing something, it is better to stop
   // the decoder: we avoid mutex issues!

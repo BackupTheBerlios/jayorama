@@ -47,7 +47,7 @@ namespace izsound
  * -> void void decode(int direction, unsigned int frame_position, 
                        unsigned int block_size, double* buffer);
  *
- * -> void open(const char* filename);
+ * -> void openFile(const char* filename);
  *
  * These are, in some way, specific for each format, so are not
  * implemented in the DecoderBase class. There is although
@@ -91,7 +91,7 @@ public:
    /**
    * Opens a file from a filename.
    *
-   * WARNING! "open" function fills some info data about the file decoded:
+   * WARNING! "openFile" function fills some info data about the file decoded:
    * 
    * m_channels, 
    * m_samplerate, 
@@ -104,7 +104,7 @@ public:
    * @throw IzSoundException An exception is thrown when the opening operation
    *                         process encounters a failure.
    */
-  virtual void open(const char* filename) = 0;
+  virtual void openFile(const char* filename) = 0;
   
 private:
 

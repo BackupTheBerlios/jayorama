@@ -8,6 +8,12 @@ Version UNKNOWN ---------------------------------
 -------------------------------------------------
 
 
+( 07-09-2004 )
+
+o)+ Minor change to DecoderBase class: "open" becomes "openFile" to avoid
+    name incompatibilities with STL;
+
+
 ( 06-09-2004 )
 
 o)+ Draft version 0.2 with Dunstan Nesbit's todo points;
