@@ -74,12 +74,6 @@ namespace izsound
  
  
  
-// Decoder Status definitions	
-#define		DECODER_OK		0
-#define		DECODER_ERROR_UNKNOWN	1
-#define		DECODER_FORMAT_UNKNOWN	2
-#define		DECODER_THREAD_ERROR	3 
- 
 // Decoder stream directions
 #define 	FORWARD			1
 #define 	BACKWARD		2

@@ -1,4 +1,4 @@
-/* sndfiledecoder.h
+/* mpadecdecoder.h
  *
  *  Copyright (C) 2004 Gianluca Romanin (aka J_Zar) <jayorama_at_users.sourceforge.net>
  *
@@ -18,19 +18,19 @@
  */
  
 
-#ifndef	_SNDFILEDECODER_H
-#define	_SNDFILEDECODER_H
+#ifndef	_MPADECDECODER_H
+#define	_MPADECDECODER_H
 
 
 
-#include <sndfile.h>
+#include <mp3dec.h>
 #include <decoderbase.h>
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif 
 
-//#include <common_def.h>
+#include <common_def.h>
 
 
 using namespace std;
@@ -39,23 +39,32 @@ namespace izsound
 {
 
 /**
- * Decodes an audio stream using libsndfile.
+ * Decodes an audio stream using Mpadec.
  *
  * @author Gianluca Romanin (aka J_Zar) <jayorama_at_users.sourceforge.net>
  */
-class SndFileDecoder : public DecoderBase
+class MpadecDecoder : public DecoderBase
 {
 
 private:
     
-  /** SNDFILE pointer. Opened by libsndfile. */
-  SNDFILE* file;
+  /** File descriptor status. */
+  int fd;
   
-  /** Info structure allocated by libsndfile on file open. */
-  SF_INFO sfinfo;
+  /** Info structure allocated by Mpadec. */
+  mpadec_info_t mpainfo;;
+  
+  /** Mpadec decoder struct. */
+  mp3dec_t mpa;
+  
+  /** Mpadec config struct. */
+  mpadec_config_t config;
   
   /** Previous position in frames. Used to know when seeking. */
   unsigned int previous_frame_position;
+  
+  /** Used for seek convertion. */
+  unsigned int block_size;
 
 
 public:
@@ -69,13 +78,13 @@ public:
    *        full at each <code>performDsp()</code> invocation.
    * @param sampleRate DspUnit samplerate parameter. Actually UNUSED.
    */
-  SndFileDecoder(const unsigned int &bufferSize = 4096,
+  MpadecDecoder( const unsigned int &bufferSize = 4096,
                  const unsigned int &sampleRate = 44100);
 
   /**
    * The destructor.
    */
-  virtual ~SndFileDecoder();
+  virtual ~MpadecDecoder();
 
    /**
    * Opens a file from a filename.

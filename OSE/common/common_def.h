@@ -17,8 +17,24 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */ 
 
- 
+#ifndef   __OSE_COMMON_DEFINITIONS_
+#define   __OSE_COMMON_DEFINITIONS_
 
+
+ 
+/*****         Return values and status             ****/
+ 
+#define		OSE_OK			0
+#define		OSE_ERROR_UNKNOWN	1
+#define		OSE_ERROR_OPENING	2
+#define		OSE_ERROR_WRITE		3
+#define		OSE_ERROR_READ		4
+#define		OSE_FORMAT_UNKNOWN	5
+#define		OSE_THREAD_ERROR	6 
+
+
+ 
+/*****         Formats                              ****/
 
 #define	OSE_NULL_FORMAT			0
 #define	OSE_AUDIO_PCM_16		1		/* Signed 16 bit data */
@@ -33,4 +49,7 @@
 /*** Default label for audio data */
 typedef	int	audioDataType ;
 
+
+
+#endif
 

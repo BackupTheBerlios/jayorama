@@ -31,7 +31,7 @@ DecoderBase::DecoderBase(const unsigned int &bufferSize,
 {
   // Init
   m_endReached = false;
-  m_status = DECODER_OK;
+  m_status = OSE_OK;
   m_readBufferSize = bufferSize;
 #ifdef _FLOAT_ENGINE
   m_readBuffer = new float[m_readBufferSize];
@@ -88,7 +88,7 @@ void DecoderBase::startThread()
   if ( error_code )
   {
   	cerr <<"ERROR: return code from pthread_create() is " <<  error_code << endl;
-  	m_status = DECODER_THREAD_ERROR;
+  	m_status = OSE_THREAD_ERROR;
 	return;
   }
   
@@ -132,7 +132,7 @@ void* DecoderBase::threadLoop(void *_decoder)
 	// safe copy of our setup...
 	OperationRegister do_operation = decoder->m_operation;
 	// error prevention...
-	if ( decoder->m_status != DECODER_OK )
+	if ( decoder->m_status != OSE_OK )
 	{
 		do_operation = decoder->m_operation = STOP;
 	}
@@ -239,7 +239,7 @@ void DecoderBase::performDsp()
   frames_in_buffer = 0;
   
 // #ifdef DEBUG
-// 	cout << "performDsp ok..." << endl;
+// 	cout << "performDsp call..." << endl;
 // #endif 
 }
 

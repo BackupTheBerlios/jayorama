@@ -36,7 +36,7 @@ SndFileDecoder::SndFileDecoder(const unsigned int &bufferSize,
   previous_frame_position = 0;
   // format must be 0 if file is opened in read mode... (from sndfile docs)
   sfinfo.format = 0;
-  m_status = DECODER_OK;
+  m_status = OSE_OK;
 }
 
 
@@ -120,7 +120,7 @@ void SndFileDecoder::open(const char* filename)
   if (file == NULL)
   {
   	cerr << "ERROR: libsndfile error: " <<  sf_strerror(file) << endl;
-	m_status = DECODER_FORMAT_UNKNOWN;
+	m_status = OSE_FORMAT_UNKNOWN;
 	return;
   }
   
@@ -146,6 +146,6 @@ void SndFileDecoder::open(const char* filename)
 #endif
 
   // now we are done!
-  m_status = DECODER_OK;
+  m_status = OSE_OK;
 }
 
