@@ -65,7 +65,7 @@ from external libraries and packages included in JE.
 o)-> DETAILS && TODO && TOTHINK
 
 	In the "input" directory there are decoder classes: I provided some
-alpha code (not all works and nor all works fine...) to decode with Virbis
+alpha code (not all works and nor all works fine...) to decode with Vorbis
 libs (base written by Julien PONGE), libsndfile formats and libMpeg3. A class
 "InputSwitcher" has to be build and will have these charachterics:
 - inherits DspUnit and can connect 1 input and 1 output;
@@ -100,7 +100,7 @@ Jack ports and so on...). JOutput will set up the output situation and
 connect it to MCMixer. JCrossfader will be a special class: will control
 2 JDecoder classes and MCMixer to allow: autogain (use Mp3Gain project
 code to detect the right value if enabled by user), sync (Bpm dynamic
-calulation if allowed by the user with (maybe) the SoundTouch BpmDetect
+calculation if allowed by the user with (maybe) the SoundTouch BpmDetect
 code (not yet included in external dir)), beatmatch (with offline or
 dynamic retrieved data. If on Linux platforms could be used BpmDj
 for offline data) and finally crossfade (maybe different crassfading
@@ -114,6 +114,8 @@ to JCrossfader to allow controlling it.
 o)-> WHO'S WORKING ON WHAT?
 
 -- [ J_Zar ] now working on MCMixer class;
+-- [ J_Zar ] now working on DecoderBase class;
+-- [ J_Zar ] now working on SndFileDecoder class;
 
 All the rest could be coded by you!!! ;-D
 
@@ -150,6 +152,10 @@ o)- RtAudio ( http://music.mcgill.ca/~gary/rtaudio/ ), by Gary P. Scavone
     more);
 
 o)- headers file of LibMpeg3 ( http://www.heroinewarrior.com ), by Heroine Virtual Ltd.
+    published under the GPL license (see the related dir for 
+    more);
+    
+o)- autogain functions from Mp3Gain ( http://www.mp3gain.sourceforge.net ), by Heroine Virtual Ltd.
     published under the GPL license (see the related dir for 
     more);
     
