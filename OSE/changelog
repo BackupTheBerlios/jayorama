@@ -6,6 +6,37 @@
 
 Version UNKNOWN ---------------------------------
 -------------------------------------------------
+
+
+( 07-08-2004 )
+
+o)+ RtAudioOutput has been coded partially. Some issues to be
+    thinked;
+o)+ OutputBase class is almost working;
+o)+ Changes in test code to build output stuff. Not
+    working ;-( ;
+
+
+( 06-08-2004 )
+
+o)+ Changes in IzSound lib. File dspunit.h has been changed
+    to follow the multiple audio data management (see
+    readme.changes in the IzSound dir);
+o)+ Added OutputBase class draft. Very confusing actually;
+
+
+( 05-08-2004 )
+
+o)+ Changes in DecoderBase for a double data management:
+    float and double. Changes interest pcmWork function,
+    destructor, constructor and addiction of m_audioFormat;
+o)+ SndFileDecoder class adjust to follow DecoderBase changes;
+o)+ Test changes to make the stuff work. DecMPADecoder is
+    disabled till it will be useful;
+o)+ Readme minor change to follow development description;
+
+
+
 ( 28-07-2004 )
 
 o)+ Changed name and parameters for function "decode" in
@@ -16,9 +47,11 @@ o)+ Major changes to the DecoderBase class. Now pcm
 o)+ Improved documentation for DecoderBase functions;
 
 
+
 ( 19-07-2004 )
 
 o)* Project name and design changed;
+
 
 
 ( 02-07-2004 )

@@ -458,8 +458,9 @@ OBJECT = libasound.a
 TYPE = lib
 DESCRIPTION = Alsa library
 TIP_MESSAGE =
+ADD_DEFINES = __LINUX_ALSA__
 LINK_LIBS = -lasound 
-OPTIONS =  skip_link
+OPTIONS =  
 #----------------------------------------------------------------------
 # Check routines         (DON'T TOUCH!)
 include( check.qbas )
@@ -502,9 +503,46 @@ OBJECT = libpthread.a
 TYPE = lib
 DESCRIPTION = Pthread library
 TIP_MESSAGE =
+ADD_DEFINES = __LINUX_OSS__
 LINK_LIBS = -lpthread 
 OPTIONS =  exit_on_failure
 #----------------------------------------------------------------------
 # Check routines         (DON'T TOUCH!)
 include( check.qbas )
 #----------------------------------------------------------------------
+
+
+
+
+
+#   JACK HEADERS ------------------------------------------------------
+OBJECT = jack/jack.h
+TYPE = header
+DESCRIPTION = Jack headers
+CONFIG_HEADER_DEFINE = HAVE_JACK_H
+TIP_MESSAGE =
+LINK_LIBS =
+OPTIONS =
+#----------------------------------------------------------------------
+# Check routines         (DON'T TOUCH!)
+include( check.qbas )
+#----------------------------------------------------------------------
+
+
+
+
+
+#   JACK --------------------------------------------------------------
+OBJECT = pkg-config --exists 'jack >= 0.61.0'
+TYPE = command
+DESCRIPTION = Jack >= 0.61.0
+PACKAGE = Jack
+TIP_MESSAGE =
+LINK_LIBS = `pkg-config --silence-errors --cflags --libs jack`
+ADD_DEFINES = __LINUX_JACK__ 
+OPTIONS =
+#----------------------------------------------------------------------
+# Check routines         (DON'T TOUCH!)
+include( check.qbas )
+#----------------------------------------------------------------------
+

@@ -12,9 +12,7 @@
 -------------------------------
 
 	The Open Sound Engine aims to be a complete audio engine, detached from 
-interface libraries, suitable for audio programs (especially Dj oriented).
-This is not a library, so you will not have something to compile but a
-group of codefiles to be physically included in your package or linked. The coding
+interface libraries, suitable for audio programs (especially Dj oriented).The coding
 language is C++/C.
 
 
@@ -34,7 +32,8 @@ Please see the draft document.
 
 o)-> WHO'S WORKING ON WHAT?
 
--- [ J_Zar ] Input classes;
+-- [ J_Zar ] Input classes: DecoderBase, SndFileDecoder;
+-- [ J_Zar ] Output classes: OutputBase, RtAudioOutput;
 
 All the rest could be coded by you!!! ;-D
 

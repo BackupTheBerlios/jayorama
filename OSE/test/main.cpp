@@ -1,10 +1,11 @@
 
 #include <unistd.h>
 #include <iostream>
-#include <ossoutput.h>
+// #include <ossoutput.h>
 #include <sndfiledecoder.h>
 // #include <mpegdecoder.h>
-#include <decmpadecoder.h>
+// #include <decmpadecoder.h>
+#include <rtaudiooutput.h>
 
 
 using namespace izsound;
@@ -12,14 +13,16 @@ using namespace std;
 
 int main()
 {
-    char *p = "/home/j_zar/music/07-Traccia Audio 07.mp3";
+//     char *p = "/home/j_zar/music/07-Traccia Audio 07.mp3";
 //     char *p = "/home/j_zar/music/grignani_-_laiuolarmx_p2p_ext_rmx.ogg";
-//     char *p = "/home/j_zar/music/traccia_13.wav";
+    char *p = "/home/j_zar/music/traccia_13.wav";
 //     ApOutput oss;
-//     SndFileDecoder decoder;
+    SndFileDecoder decoder;
 //     MpegDecoder decoder;
-    DecMPADecoder decoder;
-    OssOutput oss( 44100, 500, "/dev/dsp" );
+//     DecMPADecoder decoder;
+    RtAudioOutput oss;
+    sleep(1);
+    cout << "Devices = " << oss.getDeviceCount() << endl;
     cout << "Ok apout" << endl;
 //     ApFileDecoder ap;
 //     MadDecoder decoder;
@@ -35,10 +38,10 @@ int main()
 //     	cout << "Decoder ok" << endl;
 //     else
 //     	cout << "Decoder broken" << endl;
-//     unsigned int frames = decoder.getFrames();
-//     cout << "Frames = " << frames << endl;
-//     cout << "Total time = " << decoder.getTotalTime() << endl;
-    decoder.play();
+    unsigned int frames = decoder.getFrames();
+    cout << "Frames = " << frames << endl;
+    cout << "Total time = " << decoder.getTotalTime() << endl;
+//     decoder.play();
 //     sleep(3);
 //     decoder.setCurrentTime( 30 );
 //     decoder.setFrame( frames - 5000000 );

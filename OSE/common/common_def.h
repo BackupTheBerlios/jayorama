@@ -19,16 +19,16 @@
 
  
 
-enum
-{
-	OSE_NULL_FORMAT		=	0,
-	OSE_AUDIO_PCM_16	=	1,		/* Signed 16 bit data */
-	OSE_AUDIO_PCM_24	=	2,		/* Signed 24 bit data */
-	OSE_AUDIO_PCM_32	=	3,		/* Signed 32 bit data */
-	OSE_AUDIO_FLOAT		=	4,		/* 32 bit float data */
-	OSE_AUDIO_DOUBLE	=	5,		/* 64 bit float data */
-	OSE_AUDIO_PCM_INT16	=	6		/* Signed 16 bit integer data */
-} ;
+
+#define	OSE_NULL_FORMAT			0
+#define	OSE_AUDIO_PCM_16		1		/* Signed 16 bit data */
+#define	OSE_AUDIO_PCM_24		2		/* Signed 24 bit data */
+#define	OSE_AUDIO_PCM_32		3		/* Signed 32 bit data */
+#define	OSE_AUDIO_FLOAT			4		/* 32 bit float data */
+#define	OSE_AUDIO_DOUBLE		5		/* 64 bit float data */
+#define	OSE_AUDIO_PCM_INT16		6		/* Signed 16 bit integer data */
+
+
 
 /*** Default label for audio data */
 typedef	int	audioDataType ;

@@ -60,8 +60,8 @@ void SndFileDecoder::decode( unsigned int frame_position,
   
   if ( frame_position != previous_frame_position + buffer_size )
   {
-  	unsigned int seek_point = frame_position;
-	if ((seek_point < getFrames()) && (seek_point >= 0))
+  	long seek_point = frame_position;
+	if ((seek_point < (long)getFrames()) && (seek_point >= 0))
 	{
 		sf_seek(file, (sf_count_t) seek_point, SEEK_SET);
 	} 
@@ -82,10 +82,10 @@ void SndFileDecoder::decode( unsigned int frame_position,
   
   // To decode we use internal double conversion of libsndfile...
 #ifdef _FLOAT_ENGINE
-  frames_decoded =   sf_readf_double(file, (float*)buffer, block_size);
+  frames_decoded =   sf_readf_double(file, (float*)buffer, buffer_size);
 #endif 
 #ifdef _DOUBLE_ENGINE
-  frames_decoded =   sf_readf_double(file, (double*)buffer, block_size);
+  frames_decoded =   sf_readf_double(file, (double*)buffer, buffer_size);
 #endif
 
   frames_in_buffer += buffer_size;

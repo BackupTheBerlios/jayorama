@@ -16,20 +16,11 @@ SOURCES	+= main.cpp \
 	../external/izsound/std-dsp/silencer.cpp \
 	../external/izsound/std-dsp/volume.cpp \
 	../external/izsound/std-dsp/whitenoise.cpp \
-# 	../external/mpegsound/bitwindow.cc \
-# 	../external/mpegsound/fileinput.cc \
-# 	../external/mpegsound/filter_2.cc \
-# 	../external/mpegsound/filter.cc \
-# 	../external/mpegsound/httpinput.cc \
-# 	../external/mpegsound/huffmantable.cc \
-# 	../external/mpegsound/mpeglayer1.cc \
-# 	../external/mpegsound/mpeglayer2.cc \
-# 	../external/mpegsound/mpeglayer3.cc \
-# 	../external/mpegsound/mpegtable.cc \
-# 	../external/mpegsound/mpegtoraw.cc \
-# 	../external/mpegsound/soundinputstream.cc \
+	../external/rtaudio/RtAudio.cpp \
 	../input/decoderbase.cpp \
-	../input/sndfiledecoder.cpp 
+	../input/sndfiledecoder.cpp \
+	../output/outputbase.cpp \ 
+	../output/rtaudiooutput.cpp
 # 	../input/mpegdecoder.cpp \
 #	../input/decmpadecoder.cpp 
 HEADERS	+= ../external/izsound/izsound/izsound/dspunit.h \
@@ -51,11 +42,18 @@ HEADERS	+= ../external/izsound/izsound/izsound/dspunit.h \
 	../external/izsound/std-dsp/izsound/silencer.h \
 	../external/izsound/std-dsp/izsound/volume.h \
 	../external/izsound/std-dsp/izsound/whitenoise.h \
-# 	../external/mpegsound/mpegsound.h \
-# 	../external/mpegsound/mpegsound_locals.h \
+	../external/rtaudio/RtAudio.h \
+	../external/rtaudio/RtError.h \
+	../external/rtaudio/asio/asiodrivers.h \
+	../external/rtaudio/asio/asio.h \
+	../external/rtaudio/asio/asiolist.h \
+	../external/rtaudio/asio/asiosys.h \
+	../external/rtaudio/asio/ginclude.h \
 	../common/common_def.h \
 	../input/decoderbase.h \
-	../input/sndfiledecoder.h 
+	../input/sndfiledecoder.h \
+	../output/outputbase.h \ 
+	../output/rtaudiooutput.h
 # 	../input/mpegdecoder.h \
 #	../input/decmpadecoder.h 
 include( main.qbas )
