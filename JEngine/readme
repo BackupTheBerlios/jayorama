@@ -31,9 +31,11 @@ o)- libmpeg3, http://heroinewarrior.com (experimental code!!!);
 3)---->             DEVELOPMENT
 -------------------------------
 
+o)-> MAIN DESIGN
+
 	The JEngine is currently under development. I projected it thinking
 to the code architecture of IzSound (http://izsound.berlios.de): so JEngine
-will be build as a chain of small dsp units in this way:
+will be build (low level) as a chain of small dsp units in this way:
 
 Input Units ---> Dsp Units ---> Output Units
 
@@ -59,7 +61,62 @@ Output Units: to provide output on different APIs. I'm thinking to a unit for
 A "test" directory is set to debug and test all the code. The "common" dir contains
 common code shared all arounf the JE while "external" dir contains code
 from external libraries and packages included in JE. 
-	
+
+o)-> DETAILS && TODO && TOTHINK
+
+	In the "input" directory there are decoder classes: I provided some
+alpha code (not all works and nor all works fine...) to decode with Virbis
+libs (base written by Julien PONGE), libsndfile formats and libMpeg3. A class
+"InputSwitcher" has to be build and will have these charachterics:
+- inherits DspUnit and can connect 1 input and 1 output;
+- find out the right file format;
+- find out the right input decoder class to use and build a FileDecoder object
+  to connect to out and performDsp;
+- inherits APlayer, but functions will call subclass decoder functions (i.e
+  performDsp will call SndFileDecoder::performDsp() if we have a Wav file);
+  
+	In the "output" directory there are out classes: I wrote a draft for
+RtAudio output. Some issues with this API: RtAudio can't playback different
+streams on different out-channells of the same device. A class for every
+device should be then created. To think about: lot of things here...
+
+	In the "dsp" directory there are dsp processing classes: MCMixer
+will be the mixing class. At first I thought to JackEQ as inspire-source
+but maybe I'll use Mix.h from SndObj library to do the work. MCMixer
+will accept multiple input and multiple output. Connect functions
+should be reimplemented in a different way, to allow enable/disable
+mixing an input over an output ( so maybe return value will be an
+input id ). A LADSPA loader class should be implemented.
+
+	The main classes for JEngine will be: JDecoder, JCrossfader
+and (tothink) JOutput. This classes will be formed by a part of the
+input-output chain. So JDecoder will inherit Dspunit (1 In & 1 Out),
+and will contain: InputSwitcher->Volume->Pitch->Flanger->BandFilter->Gain-> .
+Classes Volume, Pitch, Flanger, BandFilter are taken from IzSound, while 
+Gain should be encoded ( inherit DspUnit and uses maybe Gain.h from
+SndObj library ). Between JDecoder and JOutput will be MCMixer: the latter
+will accept more JDecoder input but not only (thinking to device inputs,
+Jack ports and so on...). JOutput will set up the output situation and 
+connect it to MCMixer. JCrossfader will be a special class: will control
+2 JDecoder classes and MCMixer to allow: autogain (use Mp3Gain project
+code to detect the right value if enabled by user), sync (Bpm dynamic
+calulation if allowed by the user with (maybe) the SoundTouch BpmDetect
+code (not yet included in external dir)), beatmatch (with offline or
+dynamic retrieved data. If on Linux platforms could be used BpmDj
+for offline data) and finally crossfade (maybe different crassfading
+behaviours could be implemented).
+
+	At the end we will have the JEngine main class: creates
+MCmixer, JOutput and connects them then with interface commands
+will create as JDecoder class as needed and will give a pointer
+to JCrossfader to allow controlling it. 
+
+o)-> WHO'S WORKING ON WHAT?
+
+-- [ J_Zar ] now working on MCMixer class;
+
+All the rest could be coded by you!!! ;-D
+
 
 4)---->                    TEST
 -------------------------------
