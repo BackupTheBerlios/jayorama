@@ -26,11 +26,11 @@
 #include <sndfile.h>
 #include <decoderbase.h>
 
-
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif 
 
+#include <common_def.h>
 
 
 using namespace std;
@@ -81,7 +81,12 @@ public:
    * Opens a file from a filename.
    *
    * WARNING! "open" function fills some info data about the file decoded:
-   * m_channels, m_samplerate, m_frames, max_frames_in_buffer
+   * 
+   * m_channels, 
+   * m_samplerate, 
+   * m_frames, 
+   * max_frames_in_buffer,
+   * m_audioFormat (depending from what format the support library can handle).
    *
    *
    * @param filename The filename.
@@ -91,15 +96,22 @@ public:
   virtual void open(const char* filename);
   
 private:
+
   /**
-   * Decodes a single pcm data frame ( left sample + right sample)
-   * and adds it to the buffer. This function act in a different
-   * way depending from what direction is set.
+   * Decodes pcm data frames ( left sample + right sample)
+   * and adds them to the buffer. This function must have a trace of
+   * the previous frame position and seek if needed.
+   * 
+   * WARNING! "decode" function update some info data about status:
    *
-   * @param direction Could be FORWARD or BACKWARD.
+   * frames_in_buffer.
+   *
+   * @param frame_position Where we start decoding (set in pcm frames).
+   * @param block_size Size of buffer in frames (we should fill it).
+   * @param buffer The buffer pointer.
    */
-  virtual void decode(int direction, unsigned int frame_position, 
-                       unsigned int block_size, double* buffer);
+  virtual void decode( unsigned int frame_position, 
+                       unsigned int buffer_size, void* buffer);
 
 };
 
@@ -108,4 +120,6 @@ private:
 
 
 #endif
+
+
 

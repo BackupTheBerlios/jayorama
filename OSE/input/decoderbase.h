@@ -25,7 +25,7 @@
 #include <config.h>
 #endif
 
-
+#include <common_def.h>
 #include <dspunit.h>
 #include <pthread.h>
 
@@ -66,7 +66,7 @@ namespace izsound
  * class must be capable to seek frames.
  *
  * WARNING2! The right value for the buffer is a multiple of 4.
- * Some exceptions could occur witrh other numbers...
+ * Some exceptions could occur with other numbers...
  *
  *
  * @author Gianluca Romanin (aka J_Zar) <jayorama_at_users.sourceforge.net>
@@ -91,12 +91,19 @@ class DecoderBase : public DspUnit
   /*****************************************************************
    * ---- >> Functions TO BE reimplemented... << ----
    */
+   
 public:  
+
    /**
    * Opens a file from a filename.
    *
    * WARNING! "open" function fills some info data about the file decoded:
-   * m_channels, m_samplerate, m_frames, max_frames_in_buffer
+   * 
+   * m_channels, 
+   * m_samplerate, 
+   * m_frames, 
+   * max_frames_in_buffer,
+   * m_audioFormat (depending from what format the support library can handle).
    *
    *
    * @param filename The filename.
@@ -106,15 +113,22 @@ public:
   virtual void open(const char* filename) = 0;
   
 private:
+
   /**
-   * Decodes a pcm data frames ( left sample + right sample)
-   * and adds it to the buffer. This function act in a different
-   * way depending from what direction is set.
+   * Decodes pcm data frames ( left sample + right sample)
+   * and adds them to the buffer. This function must have a trace of
+   * the previous frame position and seek if needed.
+   * 
+   * WARNING! "decode" function update some info data about status:
    *
-   * @param direction Could be FORWARD or BACKWARD.
+   * frames_in_buffer.
+   *
+   * @param frame_position Where we start decoding (set in pcm frames).
+   * @param buffer_size Size of buffer in frames (we should fill it).
+   * @param buffer The buffer pointer.
    */
-  virtual void decode(int direction, unsigned int frame_position, 
-                       unsigned int block_size, double* buffer) = 0;
+  virtual void decode( unsigned int frame_position, 
+                       unsigned int buffer_size, void* buffer) = 0;
   
   /*
    * ---- >> End of Functions TO BE reimplemented... << ----
@@ -253,6 +267,13 @@ private:
   virtual void unlock();
   
   /**
+   * Convert pcm data just decoded to the right format to be
+   * pushed and pushes it. This function will adjust data 
+   * looking also at the direction.
+   */
+  virtual void pcmWork( int direction );
+  
+  /**
    * When thread is started, loop function is called.
    * Here we process all decoding operation control.
    */
@@ -292,7 +313,7 @@ protected:
   int m_direction;
   
   /** The reading buffer. */
-  double* m_readBuffer;
+  void* m_readBuffer;
   
   /** Position in frames */
   unsigned int m_frame_position;
@@ -302,6 +323,11 @@ protected:
   
   /** Samplerate */
   int m_samplerate;
+  
+  /** The format of audio data decoded. This depends from support libraries
+    * and could be different from the format we'll push into the chain then.
+    * The convertion is executed by pcmConvert() function. */
+  audioDataType m_audioFormat;
   
   /** Total Nr of frames */
   unsigned int m_frames;

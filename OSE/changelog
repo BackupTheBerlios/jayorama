@@ -6,6 +6,15 @@
 
 Version UNKNOWN ---------------------------------
 -------------------------------------------------
+( 28-07-2004 )
+
+o)+ Changed name and parameters for function "decode" in
+    DecoderBase class;
+o)+ Major changes to the DecoderBase class. Now pcm
+    convertion and direction adjust is done here, in
+    function "pcmWork";
+o)+ Improved documentation for DecoderBase functions;
+
 
 ( 19-07-2004 )
 

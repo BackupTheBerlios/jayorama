@@ -50,15 +50,15 @@ SndFileDecoder::~SndFileDecoder()
 }
 
 
-void SndFileDecoder::decode(int direction, unsigned int frame_position, 
-                            unsigned int block_size, double* buffer)
+void SndFileDecoder::decode( unsigned int frame_position, 
+                       unsigned int buffer_size, void* buffer)
 {
   // Check !
   if (file == NULL) return;
   
   // Check if we should perform a seek...
-  if (( frame_position != previous_frame_position + block_size ) || 
-      ( frame_position != previous_frame_position - block_size ))
+  
+  if ( frame_position != previous_frame_position + buffer_size )
   {
   	unsigned int seek_point = frame_position;
 	if ((seek_point < getFrames()) && (seek_point >= 0))
@@ -79,30 +79,19 @@ void SndFileDecoder::decode(int direction, unsigned int frame_position,
 
   
   sf_count_t frames_decoded = 0;	
-  if ( direction == BACKWARD )
-  {
-  	sf_count_t frs = 0;
-	for ( int j = 0, offset = 0; j < block_size; j++, offset += m_channels )
-	{
-		sf_seek(file, (sf_count_t) (frame_position - 1) - j, SEEK_SET);
-		
-		frs = sf_readf_double(file, buffer + offset, 1);
-		if ( frs == 1 )
-		{
-			frames_decoded++;
-		}
-	}
-  } 
-  else
-  {
-  	// direction == FORWARD (all is simple!)
-  	// To decode we use internal double conversion of libsndfile...
-  	frames_decoded =   sf_readf_double(file, buffer, block_size);
-  }
-  frames_in_buffer += block_size;
+  
+  // To decode we use internal double conversion of libsndfile...
+#ifdef _FLOAT_ENGINE
+  frames_decoded =   sf_readf_double(file, (float*)buffer, block_size);
+#endif 
+#ifdef _DOUBLE_ENGINE
+  frames_decoded =   sf_readf_double(file, (double*)buffer, block_size);
+#endif
+
+  frames_in_buffer += buffer_size;
   
   // Check if end reached...
-  if ( frames_decoded != block_size ) 
+  if ( frames_decoded != buffer_size ) 
   {
   	m_endReached = true;
 	stop();
@@ -147,7 +136,16 @@ void SndFileDecoder::open(const char* filename)
   m_frames = sfinfo.frames;
   max_frames_in_buffer = (unsigned int)( m_readBufferSize / m_channels );
   frames_in_buffer = 0;
+  
+  // Hope that Erik stuff is more performant than mine!
+#ifdef _FLOAT_ENGINE
+  m_audioFormat = OSE_AUDIO_FLOAT;
+#endif 
+#ifdef _DOUBLE_ENGINE
+  m_audioFormat = OSE_AUDIO_DOUBLE;
+#endif
 
   // now we are done!
   m_status = DECODER_OK;
 }
+

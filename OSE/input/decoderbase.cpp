@@ -42,6 +42,7 @@ DecoderBase::DecoderBase(const unsigned int &bufferSize,
   m_frames = 0;
   max_frames_in_buffer = 0;
   frames_in_buffer = 0;
+  m_audioFormat = OSE_NULL_FORMAT;
 
   // decoder is stopped
   m_operation = STOP;
@@ -387,4 +388,197 @@ void DecoderBase::unlock()
   // unlock...
   pthread_mutex_unlock(&decoder_mutex);
 }
+
+
+void DecoderBase::pcmWork( int direction )
+{
+  void *tmp_buffer = NULL;
+  bool delete_buffer = true;
+  unsigned int nr_of_samples = (frames_in_buffer * m_channels); 
+
+  // Our tecnique: we convert all data in tmp_buffer, than push
+  // following direction flow.
+
+#ifdef _FLOAT_ENGINE
+
+  if ( m_audioFormat == OSE_AUDIO_PCM_16 )
+  {
+	// We put that on the stream
+  	int i = 0, j = 0;
+  	short ileft, iright;
+  	float left, right;
+  	(float*)tmp_buffer = new float[ nr_of_samples ];
+  	while (i < nr_of_samples)
+  	{
+    		j = i;
+		// Data unpacking
+		ileft  = ((short)m_readBuffer[i++]) & 0xff;
+		ileft  = ileft | (short)(((short)(m_readBuffer[i++])) << 8);
+		iright = ((short)m_readBuffer[i++]) & 0xff;
+		iright = iright | (short)(((short)(m_readBuffer[i++])) << 8);
+		
+		// Bijection to [-1.0 ; 1.0]
+		left   = ((float)ileft) / 32768.0;
+		right  = ((float)iright) / 32768.0;
+		
+		// We add it
+		tmp_buffer[j++] = left;
+		tmp_buffer[j]   = right;
+  	}
+  	delete_buffer = true;
+  }
+
+  if ( m_audioFormat == OSE_AUDIO_PCM_24 )
+  {
+	// Unsupported yet!
+  }
+
+  if ( m_audioFormat == OSE_AUDIO_PCM_32 )
+  {
+	// Unsupported yet!
+  }
+
+  if ( m_audioFormat == OSE_AUDIO_PCM_INT16 )
+  {
+	(float*)tmp_buffer = new float[ nr_of_samples ];
+	for (unsigned int i = 0; i < nr_of_samples; i++)
+	{
+		float left, right;
+		// Bijection to [-1.0 ; 1.0]
+   	 	left   = ((float)m_readBuffer[i++]) / 32768.0;
+    		right  = ((float)m_readBuffer[i]) / 32768.0;
+		tmp_buffer[i++] = left;
+		tmp_buffer[i++] = right;
+	}
+	delete_buffer = true;
+  }
+
+  if ( m_audioFormat == OSE_AUDIO_FLOAT )
+  {
+	// NOOP
+	(float*)tmp_buffer = (float*)m_readBuffer;
+	delete_buffer = false;
+  }
+
+  if ( m_audioFormat == OSE_AUDIO_DOUBLE )
+  {
+	// this convertion may not work or, the worst case, may work
+	// with too much approximation! 
+	(float*)tmp_buffer = new float[ nr_of_samples ];
+	for (unsigned int i = 0; i < nr_of_samples; i++)
+	{
+		tmp_buffer[i++] = (float)(m_readBuffer[i++]);
+		tmp_buffer[i++] = (float)(m_readBuffer[i]);
+	}
+	delete_buffer = true;
+  }
+
+#endif
+
+#ifdef _DOUBLE_ENGINE
+
+  if ( m_audioFormat == OSE_AUDIO_PCM_16 )
+  {
+	// We put that on the stream
+	int i = 0, j = 0;
+	short ileft, iright;
+	double left, right;
+	(double*)tmp_buffer = new double[ nr_of_samples ];
+	while (i < nr_of_samples)
+	{
+		j = i;
+		// Data unpacking
+		ileft  = ((short)m_readBuffer[i++]) & 0xff;
+		ileft  = ileft | (short)(((short)(m_readBuffer[i++])) << 8);
+		iright = ((short)m_readBuffer[i++]) & 0xff;
+		iright = iright | (short)(((short)(m_readBuffer[i++])) << 8);
+		
+		// Bijection to [-1.0 ; 1.0]
+		left   = ((double)ileft) / 32768.0;
+		right  = ((double)iright) / 32768.0;
+		
+		// We add it
+		tmp_buffer[j++] = left;
+		tmp_buffer[j]   = right;
+	}
+	delete_buffer = true;
+  }
+
+  if ( m_audioFormat == OSE_AUDIO_PCM_24 )
+  {
+	// Unsupported yet!
+  }
+
+  if ( m_audioFormat == OSE_AUDIO_PCM_32 )
+  {  
+	// Unsupported yet!
+  }
+
+  if ( m_audioFormat == OSE_AUDIO_PCM_INT16 )
+  {
+	(double*)tmp_buffer = new double[ nr_of_samples ];
+	for (unsigned int i = 0; i < nr_of_samples; i++)
+	{
+		double left, right;
+		// Bijection to [-1.0 ; 1.0]
+   	 	left   = ((double)m_readBuffer[i++]) / 32768.0;
+    		right  = ((double)m_readBuffer[i]) / 32768.0;
+		tmp_buffer[i++] = left;
+		tmp_buffer[i++] = right;
+	}
+	delete_buffer = true;
+  }
+
+  if ( m_audioFormat == OSE_AUDIO_FLOAT )
+  {
+	(double*)tmp_buffer = new double[ nr_of_samples ];
+	for (unsigned int i = 0; i < nr_of_samples; i++)
+	{
+		tmp_buffer[i++] = (double)(m_readBuffer[i++]);
+		tmp_buffer[i++] = (double)(m_readBuffer[i]);
+	}
+	delete_buffer = true;
+  }
+
+  if ( m_audioFormat == OSE_AUDIO_DOUBLE )
+  {
+	// NOOP
+	(double*)tmp_buffer = (double*)m_readBuffer;
+	delete_buffer = false;
+  }
+
+#endif
+
+
+  SlotData* output = m_outSlots[0];
+  (*output)[0].clear();
+  (*output)[1].clear();
+
+  if ( direction == BACKWARD )
+  {
+  	// reversing samples...
+	for (unsigned int i = (nr_of_samples - 1); i >= 0; i -= 2)
+	{
+		// left
+		(*output)[0].push_back(tmp_buffer[(i - 1)]);
+		// right
+		(*output)[1].push_back(tmp_buffer[i]);
+	}
+  }
+  else
+  {
+  	for (unsigned int i = 0; i < nr_of_samples; i++)
+	{
+		// left
+		(*output)[0].push_back(tmp_buffer[i++]);
+		// right
+		(*output)[1].push_back(tmp_buffer[i]);
+	}
+  }
+  
+  // all done!
+  if ( delete_buffer == true )
+  	delete [] tmp_buffer;
+}
+
 
