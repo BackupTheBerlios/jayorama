@@ -29,9 +29,9 @@ SOURCES	+= main.cpp \
 # 	../external/mpegsound/mpegtoraw.cc \
 # 	../external/mpegsound/soundinputstream.cc \
 	../input/decoderbase.cpp \
-	../input/sndfiledecoder.cpp \
+	../input/sndfiledecoder.cpp 
 # 	../input/mpegdecoder.cpp \
-	../input/decmpadecoder.cpp 
+#	../input/decmpadecoder.cpp 
 HEADERS	+= ../external/izsound/izsound/izsound/dspunit.h \
 	../external/izsound/izsound/izsound/izsoundexception.h \
 	../external/izsound/izsound/izsound/player.h \
@@ -53,10 +53,11 @@ HEADERS	+= ../external/izsound/izsound/izsound/dspunit.h \
 	../external/izsound/std-dsp/izsound/whitenoise.h \
 # 	../external/mpegsound/mpegsound.h \
 # 	../external/mpegsound/mpegsound_locals.h \
+	../common/common_def.h \
 	../input/decoderbase.h \
-	../input/sndfiledecoder.h \
+	../input/sndfiledecoder.h 
 # 	../input/mpegdecoder.h \
-	../input/decmpadecoder.h 
+#	../input/decmpadecoder.h 
 include( main.qbas )
 
 unix {
@@ -68,4 +69,4 @@ TEMPLATE	=app
 CONFIG	+= qt warn_on release
 INCLUDEPATH	+= /usr/local/include/izsound /usr/include/izsound ../input ../output ../dsp ../common ../external ../external/izsound/izsound/izsound ../external/izsound/std-dsp/izsound
 LANGUAGE	= C++
-LIBS += ../external/decmpa/libdecmpa.a
+#LIBS += ../external/decmpa/libdecmpa.a

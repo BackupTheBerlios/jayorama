@@ -24,3 +24,6 @@
 
 /* Debug. */
 #define DEBUG 1
+
+/* Choose double engine. */
+#define _DOUBLE_ENGINE 1
