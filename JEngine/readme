@@ -1,0 +1,98 @@
+ 
+                         JEngine
+		----------------------------
+		    version 0.x
+		----------------------------
+	This program is provided as it is. Use it at your own risk.
+		See LICENSE for the license agreements
+------------------------------------------------------------------------
+
+
+1)---->            WHAT'S THAT?
+-------------------------------
+
+	The JEngine aims to be a complete audio engine, detached from 
+interface libraries, suitable for audio programs (especially Dj oriented).
+This is not a library, so you will not have something to compile but a
+group of codefiles to be physically included in your package. The coding
+language is C++/C.
+
+
+
+2)---->            REQUIREMENTS
+-------------------------------
+
+	Actually:
+	
+o)- libsndfile;
+o)- libmpeg3, http://heroinewarrior.com (experimental code!!!);
+
+
+3)---->             DEVELOPMENT
+-------------------------------
+
+	The JEngine is currently under development. I projected it thinking
+to the code architecture of IzSound (http://izsound.berlios.de): so JEngine
+will be build as a chain of small dsp units in this way:
+
+Input Units ---> Dsp Units ---> Output Units
+
+Input Units: basically the decoding classes (you will find something
+	as XXXfiledecoder.h and .cpp). There will be a generic input
+	class to switch between the the others to pick up the right
+	unit for every format (ogg, wav and mp3 are already in alpha
+	code);
+	
+Dsp Units: they are all units to provide DSP processing, such as pitch,
+	filter, gain and so on... IzSound ones are already in a good stable
+	form so I'll use them. There will be a unit for LADSPA compatibility
+	too... To be coded a mixer class: I want a multichannel mixing class,
+	and each channel will be connected to a (stereo) decoder or an input chain. 
+	To do it would be useful looking at the JackEQ mixing code, that seems to be 
+	very nice;
+	
+Output Units: to provide output on different APIs. I'm thinking to a unit for
+	the RtAudio C++ wrapper and for PortAudio (this will give crossplatform
+	feature). To be decided if callback or blocking code; 
+	
+	
+A "test" directory is set to debug and test all the code. The "common" dir contains
+common code shared all arounf the JE while "external" dir contains code
+from external libraries and packages included in JE. 
+	
+
+4)---->                    TEST
+-------------------------------
+
+	In the "test" directory there is a test program, actually
+very useful to tune code components. To build it you need "qmake",
+included in the Qt library. Build with "./configure && make".
+Read the "readme" file in the dir for more info.
+
+
+5)---->    AUTHORS & AGREEMENTS
+-------------------------------
+
+	Be careful to know the license statement of this program (GPL version 2).
+Read the file "license" distributed with this package or visit http://www.gnu.org
+for more informations.
+
+Authors of this code are:
+
+o)- Gianluca Romanin (aka J_Zar), (jayorama_AT_users.sourceforge.net):
+    the main developer & maintainer.
+
+Some nice code is included and distributed here, in the "external" directory:
+
+o)- IzSound ( http://www.izforge.com/izsound/ ), by Julien PONGE 
+    published under a 3 clauses style BSD license (see the related dir 
+    for more);
+
+o)- RtAudio ( http://music.mcgill.ca/~gary/rtaudio/ ), by Gary P. Scavone
+    published under a custom MIT-like license (see the related dir for 
+    more);
+
+o)- headers file of LibMpeg3 ( http://www.heroinewarrior.com ), by Heroine Virtual Ltd.
+    published under the GPL license (see the related dir for 
+    more);
+    

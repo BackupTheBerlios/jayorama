@@ -1,0 +1,36 @@
+IzSound - Copyright (c) 2003, 2004 Julien PONGE - All rights reserved.
+
+Homepage: http://www.izforge.com/izsound/
+Contact:  <julien@izforge.com> <julien_ponge@yahoo.fr>
+
+[ Introduction ]
+
+IzSound is a stream-oriented sound processing library. It has been designed
+around small DSP units that can be chained together to operate on the sound data
+stream. While there are already several libraries of this kind, most of them are
+either too simplists or too complicated. What's more, they are often written in
+the C programming language and lead to libraries having a lot of functions and
+data structures. Using an object oriented language can dramatically ease the
+learning process by having a clearer overview.
+
+That's why IzSound is written in C++ in order to use the object oriented
+paradigms. Moreover, the C++ STL brings the concepts of generic programming and
+IzSound makes an intensive use of both the containers and the algorithms brought
+by the STL. This way it is built on both well tested data containers and
+algorithmic bricks.
+
+[ Components ]
+
+IzSound in itself is a small library which defines the DspUnit class. This is
+the base class of all the DSP units that can be plugged together to process the
+sound data streams. This class embeds all the pluging logic, so it is very easy
+to define a new DSP unit, the author has just to concentrate on the DSP job.
+
+IzSound has a standard set of DSP units brought in a separate library
+(libstdizdsp) which can read Ogg Vorbis files, crossfade two streams, actually
+output the sound on your sound card, tweak the pitch and so on.
+
+[ Licensing ]
+
+IzSound is published under a 3 clauses style BSD license. See the COPYING file
+shipped along in the distribution for the exact terms.
