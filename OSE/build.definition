@@ -1,0 +1,620 @@
+
+# Project file definition ---------------------------------------------
+PROJECT_FILE = ose.pro
+PROJECT_SETTINGS = no_qt   enable_config_h   enable_summary
+#----------------------------------------------------------------------
+
+
+# Configure Help facilities -------------------------------------------
+CONFIGURE_SCRIPT_OPTIONS = double_engine  float_engine
+CONFIGURE_SCRIPT_FEATURES = mpadec jack
+CONFIGURE_SCRIPT_PACKAGE_LIST =  mpadec jack
+#----------------------------------------------------------------------
+
+
+# Option help descriptions --------------------------------------------
+double_engine_HELP_DESCRIPTION = configure to build double precision float engine (default)
+float_engine_HELP_DESCRIPTION = configure to build single precision float engine
+build_static_HELP_DESCRIPTION = configure to build as a static library
+#----------------------------------------------------------------------
+
+
+# Custom error message ------------------------------------------------
+ERROR_TEMPLATE_MESSAGE = Cannot compile without
+#----------------------------------------------------------------------
+
+# set double_engine as default option
+!contains( PROJECT_ACTIVE_OPTIONS, float_engine ) {
+	PROJECT_ACTIVE_OPTIONS += double_engine
+	}
+	
+# check for option errors
+contains( PROJECT_ACTIVE_OPTIONS, float_engine ) {
+	contains( PROJECT_ACTIVE_OPTIONS, double_engine ) {
+		error( "Options double_engine and float_engine are mutual exclusive!")
+		}
+	}
+
+
+#   Option _DOUBLE_ENGINE ---------------------------------------------
+OBJECT = double_engine
+TYPE = option
+DESCRIPTION = building double precision engine
+ADD_DEFINES = _DOUBLE_ENGINE
+#----------------------------------------------------------------------
+# Check routines         (DON'T TOUCH!)
+include( check.qbas )
+#----------------------------------------------------------------------
+
+
+
+#   Option _FLOAT_ENGINE ---------------------------------------------
+OBJECT = float_engine
+TYPE = option
+DESCRIPTION = building single precision engine
+ADD_DEFINES = _FLOAT_ENGINE
+#----------------------------------------------------------------------
+# Check routines         (DON'T TOUCH!)
+include( check.qbas )
+#----------------------------------------------------------------------
+
+
+
+
+#   Option build_static -----------------------------------------------
+# OBJECT = build_static
+# TYPE = option
+# DESCRIPTION = building as static lib
+# contains( PROJECT_ACTIVE_OPTIONS, build_static ) {
+# 	CONFIG += staticlib
+# 	}
+#----------------------------------------------------------------------
+# Check routines         (DON'T TOUCH!)
+#include( check.qbas )
+#----------------------------------------------------------------------
+
+
+
+#   PKG-CONFIG --------------------------------------------------------
+OBJECT = pkg-config
+TYPE = bin
+DESCRIPTION =
+TIP_MESSAGE = "No pkg-config found!"
+OPTIONS =     exit_on_failure
+#----------------------------------------------------------------------
+# Check routines         (DON'T TOUCH!)
+include( check.qbas )
+#----------------------------------------------------------------------
+
+
+
+#   GLIB 1.2 ----------------------------------------------------------
+OBJECT = libglib.so
+TYPE = lib
+DESCRIPTION = GNU library (Glib) 1.2
+LINK_LIBS = -lglib
+OPTIONS =  skip_link
+#----------------------------------------------------------------------
+# Check routines         (DON'T TOUCH!)
+include( check.qbas )
+#----------------------------------------------------------------------
+
+
+
+
+# #   MP3LIB HEADERS ----------------------------------------------------
+# OBJECT = mp3.h
+# TYPE = header
+# DESCRIPTION = mp3lib headers
+# TIP_MESSAGE =
+# LINK_LIBS =
+# OPTIONS = exit_on_failure
+# #----------------------------------------------------------------------
+# # Check routines         (DON'T TOUCH!)
+# include( check.qbas )
+# #----------------------------------------------------------------------
+# 
+# 
+# 
+# 
+# #   MP3LIB LIBRARY ----------------------------------------------------
+# OBJECT = libMP3.a
+# TYPE = lib
+# DESCRIPTION = mp3lib library
+# TIP_MESSAGE =
+# LINK_LIBS = -lMP3
+# OPTIONS =  exit_on_failure
+# #----------------------------------------------------------------------
+# # Check routines         (DON'T TOUCH!)
+# include( check.qbas )
+# #----------------------------------------------------------------------
+
+
+
+
+#   SNDFILE HEADERS ---------------------------------------------------
+OBJECT = sndfile.h
+TYPE = header
+DESCRIPTION = Sndfile headers
+TIP_MESSAGE =
+LINK_LIBS =
+OPTIONS = exit_on_failure
+#----------------------------------------------------------------------
+# Check routines         (DON'T TOUCH!)
+include( check.qbas )
+#----------------------------------------------------------------------
+
+
+
+
+#   SNDFILE LIBRARY ---------------------------------------------------
+OBJECT = pkg-config --exists 'sndfile >= 1.0.5'
+TYPE = command
+DESCRIPTION = Sndfile library
+TIP_MESSAGE =
+LINK_LIBS = `pkg-config --silence-errors --cflags --libs sndfile`
+OPTIONS =  exit_on_failure
+#----------------------------------------------------------------------
+# Check routines         (DON'T TOUCH!)
+include( check.qbas )
+#----------------------------------------------------------------------
+
+
+
+
+#   AO LIBRARY --------------------------------------------------------
+OBJECT = libao.a
+TYPE = lib
+DESCRIPTION = Ao library
+TIP_MESSAGE =
+LINK_LIBS = -lao 
+OPTIONS =  exit_on_failure  # disable_feature
+#----------------------------------------------------------------------
+# Check routines         (DON'T TOUCH!)
+include( check.qbas )
+#----------------------------------------------------------------------
+
+
+
+
+#   dlfcn.h HEADER ----------------------------------------------------
+OBJECT = dlfcn.h
+TYPE = header
+CONFIG_HEADER_DEFINE = HAVE_DLFCN_H
+OPTIONS =  exit_on_failure
+#----------------------------------------------------------------------
+# Check routines         (DON'T TOUCH!)
+include( check.qbas )
+#----------------------------------------------------------------------
+
+
+
+
+
+#   inttypes.h HEADER -------------------------------------------------
+OBJECT = inttypes.h
+TYPE = header
+CONFIG_HEADER_DEFINE = HAVE_INTTYPES_H
+OPTIONS =  
+#----------------------------------------------------------------------
+# Check routines         (DON'T TOUCH!)
+include( check.qbas )
+#----------------------------------------------------------------------
+
+
+
+
+
+#   memory.h HEADER ---------------------------------------------------
+OBJECT = memory.h
+TYPE = header
+CONFIG_HEADER_DEFINE = HAVE_MEMORY_H
+OPTIONS =  
+#----------------------------------------------------------------------
+# Check routines         (DON'T TOUCH!)
+include( check.qbas )
+#----------------------------------------------------------------------
+
+
+
+
+
+#   stdbool.h HEADER --------------------------------------------------
+OBJECT = stdbool.h
+TYPE = header
+CONFIG_HEADER_DEFINE = HAVE_STDBOOL_H
+OPTIONS =  
+#----------------------------------------------------------------------
+# Check routines         (DON'T TOUCH!)
+include( check.qbas )
+#----------------------------------------------------------------------
+
+
+
+
+
+#   stdint.h HEADER ---------------------------------------------------
+OBJECT = stdint.h
+TYPE = header
+CONFIG_HEADER_DEFINE = HAVE_STDINT_H
+OPTIONS =  
+#----------------------------------------------------------------------
+# Check routines         (DON'T TOUCH!)
+include( check.qbas )
+#----------------------------------------------------------------------
+
+
+
+
+
+#   stdlib.h HEADER ---------------------------------------------------
+OBJECT = stdlib.h
+TYPE = header
+CONFIG_HEADER_DEFINE = HAVE_STDLIB_H
+OPTIONS =  exit_on_failure
+#----------------------------------------------------------------------
+# Check routines         (DON'T TOUCH!)
+include( check.qbas )
+#----------------------------------------------------------------------
+
+
+
+
+
+#   strings.h HEADER --------------------------------------------------
+OBJECT = strings.h
+TYPE = header
+CONFIG_HEADER_DEFINE = HAVE_STRINGS_H
+OPTIONS =  
+#----------------------------------------------------------------------
+# Check routines         (DON'T TOUCH!)
+include( check.qbas )
+#----------------------------------------------------------------------
+
+
+
+
+
+#   string.h HEADER ---------------------------------------------------
+OBJECT = string.h
+TYPE = header
+CONFIG_HEADER_DEFINE = HAVE_STRING_H
+OPTIONS =  exit_on_failure
+#----------------------------------------------------------------------
+# Check routines         (DON'T TOUCH!)
+include( check.qbas )
+#----------------------------------------------------------------------
+
+
+
+
+
+#   sys/fcntl.h HEADER ------------------------------------------------
+OBJECT = sys/fcntl.h
+TYPE = header
+CONFIG_HEADER_DEFINE = HAVE_SYS_FCNTL_H
+OPTIONS =  
+#----------------------------------------------------------------------
+# Check routines         (DON'T TOUCH!)
+include( check.qbas )
+#----------------------------------------------------------------------
+
+
+
+
+
+#   sys/ioctl.h HEADER ------------------------------------------------
+OBJECT = sys/ioctl.h
+TYPE = header
+CONFIG_HEADER_DEFINE = HAVE_SYS_IOCTL_H
+OPTIONS =  
+#----------------------------------------------------------------------
+# Check routines         (DON'T TOUCH!)
+include( check.qbas )
+#----------------------------------------------------------------------
+
+
+
+
+
+
+#   sys/soundcard.h HEADER --------------------------------------------
+OBJECT = sys/soundcard.h
+TYPE = header
+CONFIG_HEADER_DEFINE = HAVE_SYS_SOUNDCARD_H
+OPTIONS =  
+#----------------------------------------------------------------------
+# Check routines         (DON'T TOUCH!)
+include( check.qbas )
+#----------------------------------------------------------------------
+
+
+
+
+
+#   sys/stat.h HEADER -------------------------------------------------
+OBJECT = sys/stat.h
+TYPE = header
+CONFIG_HEADER_DEFINE = HAVE_SYS_STAT_H
+OPTIONS =  
+#----------------------------------------------------------------------
+# Check routines         (DON'T TOUCH!)
+include( check.qbas )
+#----------------------------------------------------------------------
+
+
+
+
+
+#   sys/types.h HEADER ------------------------------------------------
+OBJECT = sys/types.h
+TYPE = header
+CONFIG_HEADER_DEFINE = HAVE_SYS_TYPES_H
+OPTIONS =  
+#----------------------------------------------------------------------
+# Check routines         (DON'T TOUCH!)
+include( check.qbas )
+#----------------------------------------------------------------------
+
+
+
+
+
+#   unistd.h HEADER ---------------------------------------------------
+OBJECT = unistd.h
+TYPE = header
+CONFIG_HEADER_DEFINE = HAVE_UNISTD_H
+OPTIONS =   exit_on_failure
+#----------------------------------------------------------------------
+# Check routines         (DON'T TOUCH!)
+include( check.qbas )
+#----------------------------------------------------------------------
+
+
+
+
+
+#   MAD ---------------------------------------------------------------
+OBJECT = libmad.a
+TYPE = lib
+CONFIG_HEADER_DEFINE = HAVE_LIBMAD
+DESCRIPTION = Mad audio decoder
+TIP_MESSAGE = "The Mad decoder is needed for mp3 playback!"
+LINK_LIBS = -lmad
+OPTIONS =   exit_on_failure    
+#----------------------------------------------------------------------
+# Check routines         (DON'T TOUCH!)
+include( check.qbas )
+#----------------------------------------------------------------------
+
+
+
+
+
+#   OGG/VORBIS HEADERS ------------------------------------------------
+OBJECT = vorbis/codec.h
+TYPE = header
+DESCRIPTION = Vorbis headers
+TIP_MESSAGE = "Can't compile without Vorbis headers!"
+LINK_LIBS =
+OPTIONS =  exit_on_failure
+#----------------------------------------------------------------------
+# Check routines         (DON'T TOUCH!)
+include( check.qbas )
+#----------------------------------------------------------------------
+
+
+
+
+#   OGG/VORBIS --------------------------------------------------------
+OBJECT = libvorbis.a
+TYPE = lib
+DESCRIPTION = Vorbis library
+TIP_MESSAGE = "Vorbis library is needed for ogg playback!"
+LINK_LIBS = -lvorbis
+ADD_DEFINES = 
+OPTIONS =   exit_on_failure   
+#----------------------------------------------------------------------
+# Check routines         (DON'T TOUCH!)
+include( check.qbas )
+#----------------------------------------------------------------------
+
+
+
+
+#   OGG   -------------------------------------------------------------
+OBJECT = libogg.a
+TYPE = lib
+DESCRIPTION = Ogg Vorbis library
+TIP_MESSAGE = "Ogg library is needed for ogg playback!"
+LINK_LIBS = -logg
+ADD_DEFINES = 
+OPTIONS =   exit_on_failure   
+#----------------------------------------------------------------------
+# Check routines         (DON'T TOUCH!)
+include( check.qbas )
+#----------------------------------------------------------------------
+
+
+
+
+#   VORBISFILE --------------------------------------------------------
+OBJECT = libvorbisfile.a
+TYPE = lib
+DESCRIPTION = Vorbisfile library
+TIP_MESSAGE = Vorbisfile library is needed for ogg playback!"
+LINK_LIBS = -lvorbisfile
+ADD_DEFINES = 
+OPTIONS =   exit_on_failure   
+#----------------------------------------------------------------------
+# Check routines         (DON'T TOUCH!)
+include( check.qbas )
+#----------------------------------------------------------------------
+
+
+
+
+#   ALSA HEADERS ------------------------------------------------------
+OBJECT = alsa/asoundlib.h
+TYPE = header
+DESCRIPTION = Alsa Asoundlib
+TIP_MESSAGE =
+LINK_LIBS =
+OPTIONS =
+#----------------------------------------------------------------------
+# Check routines         (DON'T TOUCH!)
+include( check.qbas )
+#----------------------------------------------------------------------
+
+
+
+
+#   ALSA LIBRARY ------------------------------------------------------
+OBJECT = libasound.a
+TYPE = lib
+DESCRIPTION = Alsa library
+TIP_MESSAGE =
+ADD_DEFINES = __LINUX_ALSA__
+LINK_LIBS = -lasound 
+OPTIONS =  
+#----------------------------------------------------------------------
+# Check routines         (DON'T TOUCH!)
+include( check.qbas )
+#----------------------------------------------------------------------
+
+
+
+
+#   DL LIBRARY --------------------------------------------------------
+OBJECT = libdl.a
+TYPE = lib
+DESCRIPTION = Dl library
+TIP_MESSAGE =
+LINK_LIBS = -ldl 
+OPTIONS =  exit_on_failure
+#----------------------------------------------------------------------
+# Check routines         (DON'T TOUCH!)
+include( check.qbas )
+#----------------------------------------------------------------------
+
+
+
+
+#   pthread.h HEADER --------------------------------------------------
+OBJECT = pthread.h
+TYPE = header
+CONFIG_HEADER_DEFINE = HAVE_PTHREAD_H
+OPTIONS =  exit_on_failure
+#----------------------------------------------------------------------
+# Check routines         (DON'T TOUCH!)
+include( check.qbas )
+#----------------------------------------------------------------------
+
+
+
+
+
+#   PTHREAD LIBRARY ---------------------------------------------------
+OBJECT = libpthread.a
+TYPE = lib
+DESCRIPTION = Pthread library
+TIP_MESSAGE =
+ADD_DEFINES = __LINUX_OSS__
+LINK_LIBS = -lpthread 
+OPTIONS =  exit_on_failure
+#----------------------------------------------------------------------
+# Check routines         (DON'T TOUCH!)
+include( check.qbas )
+#----------------------------------------------------------------------
+
+
+
+
+
+#   JACK HEADERS ------------------------------------------------------
+OBJECT = jack/jack.h
+TYPE = header
+DESCRIPTION = Jack headers
+PACKAGE = jack
+CONFIG_HEADER_DEFINE = HAVE_JACK_H
+TIP_MESSAGE =
+LINK_LIBS =
+OPTIONS = 
+#----------------------------------------------------------------------
+# Check routines         (DON'T TOUCH!)
+include( check.qbas )
+#----------------------------------------------------------------------
+
+
+
+
+
+#   JACK --------------------------------------------------------------
+OBJECT = pkg-config --exists 'jack >= 0.98.1'
+TYPE = command
+DESCRIPTION = Jack >= 0.98.1
+PACKAGE = jack
+FEATURE = jack
+TIP_MESSAGE =
+LINK_LIBS = `pkg-config --silence-errors --cflags --libs jack'
+ADD_DEFINES = __LINUX_JACK__ 
+OPTIONS =  disable_feature
+#----------------------------------------------------------------------
+# Check routines         (DON'T TOUCH!)
+include( check.qbas )
+#----------------------------------------------------------------------
+
+
+
+
+
+#   MPADEC HEADERS ----------------------------------------------------
+OBJECT = mp3dec.h
+TYPE = header
+PACKAGE = mpadec
+TIP_MESSAGE =
+LINK_LIBS =
+OPTIONS = 
+#----------------------------------------------------------------------
+# Check routines         (DON'T TOUCH!)
+include( check.qbas )
+#----------------------------------------------------------------------
+
+
+
+
+
+#   MPADEC HEADERS ----------------------------------------------------
+OBJECT = mpadec.h
+TYPE = header
+PACKAGE = mpadec
+CONFIG_HEADER_DEFINE = HAVE_MPADEC_H
+TIP_MESSAGE =
+LINK_LIBS =
+OPTIONS = 
+#----------------------------------------------------------------------
+# Check routines         (DON'T TOUCH!)
+include( check.qbas )
+#----------------------------------------------------------------------
+
+
+
+
+
+
+#   MPADEC ------------------------------------------------------------
+OBJECT = libmpadec.a
+TYPE = lib
+DESCRIPTION = Mpadec library
+PACKAGE = mpadec
+FEATURE = mpadec
+TIP_MESSAGE =
+LINK_LIBS =
+ADD_HEADERS = ../input/mpadecdecoder.h 
+ADD_SOURCES = ../input/mpadecdecoder.cpp
+OPTIONS = disable_feature
+#----------------------------------------------------------------------
+# Check routines         (DON'T TOUCH!)
+include( check.qbas )
+#----------------------------------------------------------------------
+

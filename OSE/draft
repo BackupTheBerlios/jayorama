@@ -2,7 +2,7 @@
 	Open Sound Engine
 	=================
 
-	Draft version: 0.1 (19/07/2004)
+	Draft version: 0.2 (06/09/2004)
 
 Implementation design and project details for developer audience.
 Read it in this way:
@@ -37,8 +37,8 @@ o)- [ J_Zar ] Threaded decoding class to achieve good performance and
     decoding);
 o)- [ J_Zar ] Support for widespread formats: vorbis (ogg at first,
     speex and flac following), mpeg (layer I/II/III), wav, aiff;
-o)- [ J_Zar ] A C function could be coded to provide the right format 
-    decoder class for a file (function factory trick);
+o)- [ J_Zar ] Input from soundcard;
+o)- [ Dunstan ] Input from stream server;
 
     
 DSP
@@ -54,6 +54,8 @@ o)- [ J_Zar ] Crossfader class (maybe not a DspUnit);
 o)- [ J_Zar ] Equalization class with flanger too;
 o)- [ J_Zar ] LADSPA and VSTI support (issues with interface?)
     {proposal};
+o)- [ Dunstan ] capability to switch between softmix or
+    direct hardware output;
     
     
 Output
@@ -66,6 +68,8 @@ o)- [ J_Zar ] No need of other output API code: PortAudio and RtAudio
     coverage is Linux (OSS, Alsa, Jack), MS (DirectSound, ME, ASIO),
     Mac (CoreAudio) {tothink};
 o)- [ J_Zar ] To think about how set up the output platform {tothink};
+o)- [ Dunstan ] Output on a file: encoder code;
+o)- [ Dunstan ] Output to a stream broadcasting server;
     
     
 Side code
@@ -76,7 +80,8 @@ o)- [ J_Zar ] To think of playlist support: maybe a good playlist
     {tothink};
 o)- [ J_Zar ] AudioManager object. It should stand besides the engine
     main class {tothink};
-o)- [ J_Zar ] Tag code {tothink};
+o)- [ J_Zar ] Tag code with Taglib! {closed};
+o)- [ J_Zar ] MIDI controller support: also MIDI I/O. PortMidi??? {tothink};
 
 
 High-level
@@ -99,7 +104,7 @@ Build environment
 o)- [ J_Zar ] Build scripts must be cross platform. I dislike
     GNU tools. I'm able to use qmake, that allows a library build detached
     from interface libs also if it comes with Qt libs. 
-    My QBAS should be than easy to use as dep check {tothink};
+    My QBASystem should be than easy to use as dep check {tothink};
     
     
     

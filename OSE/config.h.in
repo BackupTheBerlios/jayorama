@@ -1,0 +1,26 @@
+/* Define to 1 if the system has the type `_Bool'. */
+#define HAVE__BOOL 1
+
+/* Name of package */
+#define PACKAGE "OSE"
+
+/* Define to the address where bug reports for this package should be sent. */
+#define PACKAGE_BUGREPORT "j_zar_AT_users.berlios.de"
+
+/* Define to the full name of this package. */
+#define PACKAGE_NAME "OSE"
+
+/* Define to the full name and version of this package. */
+#define PACKAGE_STRING "OSE 0.6-pre0"
+
+/* Define to the one symbol short name of this package. */
+#define PACKAGE_TARNAME "OSE"
+
+/* Define to the version of this package. */
+#define PACKAGE_VERSION "0.6-pre0"
+
+/* Version number of package */
+#define VERSION "0.6-pre0"
+
+/* Debug. */
+#define DEBUG 1

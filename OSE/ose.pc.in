@@ -1,0 +1,10 @@
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include/ose
+
+Name: ose
+Description: The Open Sound Engine audio library
+Requires:
+Version: 0.6.0pre0
+Libs: -L${libdir} -lose
+Cflags: -I${includedir} 

@@ -8,7 +8,33 @@ Version UNKNOWN ---------------------------------
 -------------------------------------------------
 
 
-( 010-08-2004 )
+( 06-09-2004 )
+
+o)+ Draft version 0.2 with Dunstan Nesbit's todo points;
+
+
+( 30-08-2004 )
+
+o)+ The whole build environment is ready. Now it is possible to build
+    libose in a shared way;
+o)+ The output class has a major change: split into the platform base API 
+    and the output object. Consequently: OutputAPIBase, OutputObjectBase.
+    Respecting this design, coded RtAudio interface classes: almost working;
+o)+ Important minor change to IzSound file DspUnit.h. Documented in the
+    IzSound code directory;
+
+
+( 17-08-2004 )
+
+o)+ Added a draft of the OSEConfigManager class;
+
+
+( 12-08-2004 )
+
+o)+ All error codes and retvalues are now moved to common_def.h;
+
+
+( 10-08-2004 )
 
 o)+ RtAudioOutput now working! ;-) Ok... not correctly yet,
     but my soundcard grasp and I'm happy!;

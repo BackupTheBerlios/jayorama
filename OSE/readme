@@ -23,9 +23,31 @@ language is C++/C.
 	Actually:
 	
 o)- libsndfile;
+o)- qmake and QTDIR set;
+o)- other... ;-(
 
 
-3)---->             DEVELOPMENT
+3)---->                 INSTALL
+-------------------------------
+
+	To install OSE you need to have the QTDIR env variable correctly
+set to your Qt environment. That is a little issue: OSE does not depend from
+Qt library, because it is not a GUI library, except for the building
+environment (QBASystem, written from me). After that simply try:
+
+./configure
+make
+make install (as root or with proper rights)
+
+Optionally you could try configuring with:
+
+--double_engine		double precision float engine (default)
+--float_engine		single precision float engine
+--build_static		build library as static (actually unavailable)
+--enable-jack		enable Jack sound server support
+
+
+4)---->             DEVELOPMENT
 -------------------------------
 
 Please see the draft document.
@@ -38,7 +60,7 @@ o)-> WHO'S WORKING ON WHAT?
 All the rest could be coded by you!!! ;-D
 
 
-4)---->                    TEST
+5)---->                    TEST
 -------------------------------
 
 	In the "test" directory there is a test program, actually
@@ -47,7 +69,7 @@ included in the Qt library. Build with "./configure && make".
 Read the "readme" file in the dir for more info.
 
 
-5)---->    AUTHORS & AGREEMENTS
+6)---->    AUTHORS & AGREEMENTS
 -------------------------------
 
 	Be careful to know the license statement of this program (GPL version 2).
@@ -69,7 +91,7 @@ o)- RtAudio ( http://music.mcgill.ca/~gary/rtaudio/ ), by Gary P. Scavone
     published under a custom MIT-like license (see the related dir for 
     more);
     
-o)- autogain functions from Mp3Gain ( http://www.mp3gain.sourceforge.net ), by Heroine Virtual Ltd.
+o)- autogain functions from Mp3Gain ( http://www.mp3gain.sourceforge.net ), by ...
     published under the GPL license (see the related dir for 
     more);
     
